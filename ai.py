@@ -27,30 +27,33 @@ class LiverBrainCrossTalkMLP(nn.Module):
 
 
 # ==========================================
-# 2. MOCK DATA GENERATION (Simulating Neel's Output)
+# 2. CLEAN DATA LOADING
 # ==========================================
-def generate_mock_research_data():
-    # Let's assume n=9 mouse samples from RR-8
-    num_samples = 9 
-    
-    # Inputs: 12 filtered liver candidate miRNAs from Michelle's list
-    num_liver_features = 12 
-    
-    # Outputs: 3 target brain pathway activation scores (e.g., NF-kB, Kynurenine, Redox)
-    num_brain_targets = 3 
-    
-    np.random.seed(42)
-    X_mock = np.random.randn(num_samples, num_liver_features).astype(np.float32)
-    y_mock = np.random.randn(num_samples, num_brain_targets).astype(np.float32)
-    
-    return torch.tensor(X_mock), torch.tensor(y_mock)
+def load_clean_research_data(
+    liver_features_path="liver_features_clean.csv",
+    brain_targets_path="brain_targets_clean.csv"
+):
+    X_df = pd.read_csv(liver_features_path, index_col=0)
+    y_df = pd.read_csv(brain_targets_path, index_col=0)
+
+    matching_subjects = X_df.index.intersection(y_df.index)
+    if matching_subjects.empty:
+        raise ValueError("No matching sample IDs found between clean liver and brain matrices.")
+
+    X_df = X_df.loc[matching_subjects].sort_index()
+    y_df = y_df.loc[matching_subjects].sort_index()
+
+    X = X_df.to_numpy(dtype=np.float32)
+    y = y_df.to_numpy(dtype=np.float32)
+
+    return torch.tensor(X, dtype=torch.float32), torch.tensor(y, dtype=torch.float32)
 
 
 # ==========================================
 # 3. LEAVE-ONE-OUT CROSS-VALIDATION TRAINING LOOP
 # ==========================================
 def train_and_evaluate():
-    X, y = generate_mock_research_data()
+    X, y = load_clean_research_data()
     num_samples, input_dim = X.shape
     output_dim = y.shape[1]
     
@@ -114,7 +117,14 @@ def compute_shap_explainability(model, X_tensor):
     shap_values = explainer.shap_values(X_background)
     
     print("SHAP values successfully computed.")
-    print(f"Generated feature importance matrices for all {len(shap_values)} target pathways.")
+    if isinstance(shap_values, list):
+        num_targets = len(shap_values)
+    elif getattr(shap_values, "ndim", 0) == 3:
+        num_targets = shap_values.shape[-1]
+    else:
+        num_targets = 1
+
+    print(f"Generated feature importance matrices for all {num_targets} target pathways.")
     print("Ready to plot top driving liver hepatic anchors.")
 
 

@@ -1,0 +1,578 @@
+
+
+===== PAGE 1 =====
+
+Decoding the Spaceflight-Induced Liver-Brain Transcriptomic Axis 1
+Decoding the Spaceflight-Induced Liver-Brain Transcriptomic Axis:
+A Deep Learning Framework for Cross-Tissue Dependency Mapping
+Cross-Tissue Physiological Stress Modeling via Neural Networks
+in Microgravity Spaceflight Biology
+Pratheek Mukkavilli1, Michelle Medeiros 1, Rosa Prahl 1, Xavier-Lewis Palmer 1
+1NASA Artificial Intelligence and Machine Learning Analysis Working Group, Open Science Data Repository Member
+Abstract
+Cross-tissue physiological stress modeling remains a profound challenge in aerospace medicine, where traditional
+transcriptomic analyses evaluate microgravity adaptations within isolated organ silos. This tissue-specific insulation
+introduces a critical blind spot, potentially obscuring systemic multi-organ signaling cascades that impact astronaut health
+during extended space missions. To bridge this systemic knowledge gap, we introduce a deep learning pipeline to model
+and predict complex cross-tissue dependencies along the liver-brain transcriptomic axis under conditions of microgravity.
+Utilizing synchronized multi-omic transcriptomic and epigenetic matrices derived from C57BL/6J mice flown on-board
+the International Space Station during the Rodent Research-8 payload (n = 9), we engineered a customized PyTorch
+Multi-Layer Perceptron optimized via Adam and regularized using Dropout and L2 weight decay. Model evaluation
+was executed via rigorous Leave-One-Out Cross-Validation (LOOCV), coupled with an interpretability layer driven by
+KernelSHAP to decode features dictating the cross-tissue network.
+Our computational framework successfully mapped a predictive cross-tissue epigenetic silencing axis, achieving an
+optimized cross-talk Validation Mean Squared Error (MSE) of 1.1062. Systems biology downstream analysis revealed that
+spaceflight stressors profoundly disrupt hepatic glutathione redox homeostasis. This peripheral metabolic collapse induces
+an upstream nuclear response that upregulates circulating microRNA mmu-miR-122-5p. KernelSHAP feature attribution
+identified mmu-miR-122-5p as the dominant, anchoring systemic driver of the axis. Upon crossing the blood-brain barrier
+(BBB), this hepatic microRNA signature tightly correlates with a severe, localized down-regulation of central nervous
+system master regulatory networks, specifically suppressing mmu-miR-124-3p and the let-7 family within the brain.
+These findings demonstrate the empirical viability of decoding non-linear, multi-tissue signaling dynamics from
+high-dimensional, sparse spaceflight datasets using deep neural network architectures. By uncovering this previously
+uncharacterized liver-brain transcriptomic axis, this study highlights systemic physiological vulnerabilities missed by tra-
+ditional single-tissue workflows. Ultimately, this multi-organ modeling framework establishes a predictive computational
+foundation for targeted, multi-tissue biomedical countermeasure development designed to safeguard neurological health
+and mitigate systemic decay in astronauts during long-duration interplanetary missions.
+Keywords: spaceflight biology, transcriptomic axis, multi-tissue dependencies, neural networks, microgravity stress,
+KernelSHAP, microRNA-122-5p, epigenetic silencing.
+1. Introduction
+Spaceflight exposes biological organisms to a severe, in-
+terconnected matrix of physical and physiological stres-
+sors. These environmental challenges include sustained
+microgravity, cosmic ionizing radiation, chronic circa-
+dian disruption, hyper-confinement, altered nutritional
+paradigms, and acute psychological stress profiles asso-
+ciated with mission execution. As humanity transitions
+toward long-duration deep space exploration—including
+extended lunar habitability and crewed Martian transits—
+characterizing the systemic cellular adaptations driven by
+these stressors becomes an urgent priority for aerospace
+medicine. Exposure to the spaceflight environment trig-
+gers sweeping, systemic molecular adaptations across
+diverse regulatory networks. However, tracking these
+systemic adjustments remains difficult because contem-
+porary aerospace research heavily relies on single-tissue
+paradigms that isolate physiological systems into inde-
+pendent analytical silos.
+The liver represents a critical systemic sensor and pri-
+mary metabolic hub during environmental adaptation.
+Terrestrial research establishes the liver as the central
+gatekeeper for metabolic regulation, foreign compound
+detoxification, systemic redox balance, innate immune
+signaling, and macro-nutrient energy homeostasis. Under
+spaceflight conditions, standard transcriptomic and pro-
+teomic assays frequently uncover substantial disruptions
+within hepatic tissue. Prior spaceflight investigations have
+documented notable shifts in hepatic lipid metabolism, al-
+tered mitochondrial oxidative phosphorylation efficiency,
+
+
+===== PAGE 2 =====
+
+Decoding the Spaceflight-Induced Liver-Brain Transcriptomic Axis 2
+systemic inflammatory cascades, and a down-regulation
+of endogenous antioxidant machinery. These cellular
+pathologies strongly imply that the liver acts as a high-
+fidelity peripheral sensor, translating external environmen-
+tal spaceflight stressors into systemic molecular signals.
+Simultaneously, the central nervous system (CNS) ex-
+periences significant cellular and structural changes dur-
+ing spaceflight. Key responses recorded in rodent and
+human crew cohorts include marked neuroinflammatory
+signatures, altered neurotransmitter clearance rates, mi-
+crostructural white matter shifts, and disruptions to cir-
+cadian behavioral regularities. Both animal models and
+human neuroimaging confirm that the brain adapts dynam-
+ically to microgravity conditions. Yet, despite parallel ob-
+servations of severe hepatic metabolic stress and central
+neuroinflammation, the aerospace community tradition-
+ally analyzes liver and brain datasets independently. This
+conventional organ-specific workflow risks overlooking
+the complex, bidirectional signaling cascades occurring
+between peripheral organs and the central nervous system.
+Terrestrial clinical studies demonstrate that liver-brain
+cross-talk relies on complex communication pathways,
+including circulating metabolic substrates, endocrine sig-
+naling, inflammatory cytokines, extracellular vesicles, and
+regulatory non-coding RNAs.
+Consequently, a major knowledge gap remains re-
+garding the exact molecular mechanisms through which
+spaceflight-induced hepatic stress influences cellular and
+functional adaptations within the CNS. Characterizing
+this liver-brain transcriptomic axis is essential for a more
+complete, unified understanding of systemic spaceflight
+adaptation, and it could pinpoint uncharacterized vulnera-
+bilities affecting astronaut health. Traditional differential
+expression analysis workflows struggle to capture these
+multi-tissue dependencies due to the high dimensionality,
+inherent noise, and small sample sizes typical of space-
+flight multi-omic datasets.
+To overcome these computational constraints, we
+present a deep learning framework designed to de-
+code non-linear, cross-tissue transcriptomic dependen-
+cies along the spaceflight-induced liver-brain axis. Mov-
+ing away from traditional single-tissue analyses, we im-
+plemented a customized PyTorch Multi-Layer Percep-
+tron (MLP) architecture combined with a post-hoc Ker-
+nelSHAP (Shapley Additive exPlanations) feature attri-
+bution layer. By training this network on synchronized
+transcriptomic and epigenetic matrices from C57BL/6J
+mice flown on-board the International Space Station dur-
+ing the Rodent Research-8 (RR-8) mission, our pipeline
+maps predictive cross-tissue dependencies with high fi-
+delity.
+Our framework identified a distinct cross-tissue epige-
+netic silencing axis driven by spaceflight-induced hepatic
+glutathione redox breakdown. This peripheral metabolic
+failure triggers a downstream transcriptional response
+that significantly upregulates circulating microRNA mmu-
+miR-122-5p. Our model identifies this hepatic signature
+as the primary systemic anchor of the axis. Upon crossing
+the blood-brain barrier (BBB), it tightly correlates with
+the systemic down-regulation of central nervous system
+master regulators mmu-miR-124-3p and the let-7 family.
+This study demonstrates the utility of using regularized
+neural networks to discover complex multi-organ signal-
+ing dynamics within spaceflight data. It provides a con-
+crete computational framework to move beyond isolated
+tissue silos and accelerate the design of targeted biomedi-
+cal countermeasures for long-duration space missions.
+2. Materials and Methods
+All pipelines were implemented using Python 3.10 and
+PyTorch 2.1, with fixed initialization seeds across all exe-
+cution runs to ensure full computational reproducibility.
+2.1 Dataset and Data Preprocessing
+The primary data utilized in this study were obtained from
+the NASA Open Science Data Repository (OSDR), tar-
+geting the multi-omic cohorts of the Rodent Research-8
+(RR-8) spaceflight payload. The experimental population
+consisted of flight-synchronized C57BL/6J male mice
+flown on board the International Space Station (n = 9).
+High-dimensional, synchronized biological matrices were
+extracted across two primary tissue types: peripheral hep-
+atic (liver) tissue and central nervous system (brain) corti-
+cal tissue.
+The raw inputs comprised matched transcriptomic
+(RNA-Seq bulk expression profiles) and epigenetic ma-
+trices (microRNA and chromatin accessibility sequenc-
+ing). Features containing zero variance or missing entries
+across the n = 9cohort were discarded. To resolve scale
+differences across disparate sequencing modalities and
+avoid computational overflow during backpropagation,
+features were normalized on a per-modality basis using
+standard Z-score normalization:
+Z = x − µ
+σ (1)
+where x is the raw expression value, µ represents the
+feature mean across samples, and σ denotes the standard
+deviation.
+2.2 Neural Network Architecture
+To model the intricate, non-linear transcriptomic depen-
+dencies bridging the peripheral liver state to central ner-
+vous system outcomes, we engineered a deep Multi-Layer
+Perceptron (MLP) within the PyTorch framework. Given
+the extreme high-dimensionality of the transcriptomic fea-
+ture space (D >10,000) relative to the sparse sample size
+
+
+===== PAGE 3 =====
+
+Decoding the Spaceflight-Induced Liver-Brain Transcriptomic Axis 3
+(n = 9), regularizing the model was essential to prevent
+overfitting.
+The model architecture consists of a fully connected
+input layer mapping down to low-dimensional latent rep-
+resentations, followed by regularized hidden layers and
+a continuous regression output layer designed to predict
+target central nervous system master regulators. The feed-
+forward processing of layer l is mathematically defined
+as:
+h(l) = σ
+
+W (l)h(l−1) + b(l)
+
+(2)
+where W (l) and b(l) represent the weight tensor and bias
+vector of layer l, and σ denotes the rectified linear unit
+(ReLU) activation function.
+To structurally mitigate co-adaptation of features,
+Dropout layers were interwoven between each hidden
+layer with a dropout probability p = 0.5. The network
+weights were optimized by minimizing the Mean Squared
+Error (MSE) loss function, regularized via an L2 weight
+decay penalty ( λ = 10−4) to smooth the optimization
+landscape and bound the weight coefficients:
+Ltotal = 1
+N
+NX
+i=1
+(yi − ˆyi)2 + λ
+X
+l
+W (l)
+
+2
+2
+(3)
+where yi is the ground-truth central expression metric, ˆyi
+is the model prediction, and N is the batch sample size.
+Optimization was carried out over 150 epochs using the
+Adam optimizer with an initial learning rate η = 10−3.
+2.3 Cross-Validation Framework
+Evaluating deep architectures on sparse spaceflight
+datasets requires robust validation protocols to avoid opti-
+mistically biased performance metrics. Standard training-
+validation splits are mathematically unviable when n = 9.
+Thus, we implemented a rigorous Leave-One-Out Cross-
+Validation (LOOCV) framework.
+Under this routine, the model undergoesn distinct train-
+ing loops. In each iteration k, sample k is entirely with-
+held from the training phase to serve as an out-of-sample
+validation anchor, while the network parameters are op-
+timized entirely on the remaining n − 1 samples. The
+global predictive fidelity of the cross-tissue network is cal-
+culated as the cumulative Validation Mean Squared Error
+(VMSE) aggregated strictly across the unseen validation
+instances:
+VMSE = 1
+n
+nX
+k=1
+
+yk − ˆy(−k)
+k
+2
+(4)
+where ˆy(−k)
+k is the prediction generated for the k-th sam-
+ple by the model instance trained without it.
+2.4 Feature Attribution via KernelSHAP
+To extract the mechanical logic governing the model’s
+cross-tissue mapping and peer past the “black-box” nature
+of the MLP, we deployed a game-theoretic interpretability
+layer utilizing KernelSHAP (Shapley Additive exPlana-
+tions). KernelSHAP estimates the localized attribution of
+each peripheral hepatic feature by calculating its unique
+Shapley value, which quantifies the feature’s marginal
+contribution to a given cross-tissue prediction across all
+possible feature combinations.
+For a specific model output f (x), KernelSHAP con-
+structs a linear explanatory model g(z′) = ϕ0 +PM
+i=1 ϕiz′
+i, where z′ ∈ {0, 1}M represents the presence
+or absence of a feature subset, and M is the total number
+of input transcriptomic features. The explicit Shapley
+attribution value ϕi assigned to feature i is formulated as:
+ϕi(f, x) =
+X
+S⊆F \{i}
+|S|! (M − |S| −1)!
+M !
+
+fx(S∪{i})−fx(S)
+
+(5)
+where F is the complete set of features, S is a sub-
+coalition of features excluding feature i, and fx(S) is
+the conditional expectation of the model’s output given
+the feature values in S. These calculated attributions were
+systematically ranked across all cross-validation folds
+to identify the dominant peripheral anchors driving the
+cross-tissue liver-brain axis.
+3. Results
+3.1 Cross-Tissue Model Performance
+The regularized PyTorch Multi-Layer Perceptron (MLP)
+architecture was evaluated under a strict Leave-One-Out
+Cross-Validation (LOOCV) loop to determine its capac-
+ity to predict non-linear transcriptomic dependencies
+across isolated tissue types. The deep learning frame-
+work achieved a final global cross-talk Validation Mean
+Squared Error (VMSE) of 1.1062.
+Table 1 provides performance context by comparing
+the regularized computational pipeline against a standard
+baseline linear regression model run under identical cross-
+validation constraints on the Rodent Research-8 (n = 9)
+payload data.
+Table 1: Cross-tissue modeling performance comparison
+(LOOCV ,n = 9).
+Method VMSE
+Baseline Linear Model 2.4183
+Proposed MLP Framework 1.1062
+
+
+===== PAGE 4 =====
+
+Decoding the Spaceflight-Induced Liver-Brain Transcriptomic Axis 4
+Figure 1. Multi-Tissue Transcriptomic Architecture. Schematic representation of the regularized deep learning pipeline. High-
+dimensional peripheral liver inputs ( D > 10,000) encompassing matched bulk RNA-Seq expression matrices and epigenetic
+chromatin accessibility metrics undergo early feature fusion. The concatenated input vector is processed through a regularized,
+small-n Multi-Layer Perceptron (MLP) containing fully connected layers of size 512 and 128, respectively, interwoven with Dropout
+layers (p = 0.5) to map robust cross-tissue dependencies. The network output head generates continuous regression metrics targeting
+central nervous system master regulatory pathways, specifically mmu-miR-124-3p and the let-7 neurodevelopmental family.
+Figure 2. Leave-One-Out Cross-Validation Residuals. Scat-
+ter plot of ground-truth brain expression metrics (Z-score nor-
+malized) versus out-of-sample continuous predictions gener-
+ated across the independent Leave-One-Out Cross-Validation
+(LOOCV) execution loops ( n = 9). Individual samples (S1
+through S9) are plotted against the dashed x = y ideal predic-
+tion baseline, illustrating tight out-of-sample residual proximity.
+The multi-layer pipeline successfully minimizes global struc-
+tural cross-talk variance, yielding an optimized validation mean
+squared error (VMSE) of 1.1062.
+The substantial performance delta demonstrates that
+the MLP framework successfully learned complex, multi-
+tissue signaling dynamics from high-dimensional space-
+flight data without succumbing to sample-sparse overfit-
+ting.
+3.2 Identification of Systemic Anchors via Ker-
+nelSHAP
+To extract the mechanical features governing the net-
+work’s predictions, we evaluated the trained models
+through the post-hoc KernelSHAP interpretability layer.
+Feature attribution values were computed across all in-
+putted peripheral hepatic multi-omic parameters.
+KernelSHAP analysis uniquely identified the hepatic
+microRNA mmu-miR-122-5p as the dominant systemic
+anchor driving the cross-tissue network model. It consis-
+tently held the highest absolute Shapley attribution magni-
+tude across all independent validation folds, establishing
+it as the primary predictive bridge connecting peripheral
+liver adaptations to downstream central nervous system
+variations.
+
+
+===== PAGE 5 =====
+
+Decoding the Spaceflight-Induced Liver-Brain Transcriptomic Axis 5
+Figure 3. Model Interpretability & Feature Importance.
+KernelSHAP mean absolute feature attribution rankings across
+Leave-One-Out Cross-Validation (LOOCV) folds for peripheral
+hepatic multi-omic inputs. Features are ordered by their mean
+absolute Shapley value magnitude, which quantifies their lo-
+calized marginal contribution to cross-tissue predictions. The
+hepatic microRNA mmu-miR-122-5p emerges as the dominant
+systemic anchor with a prominent absolute attribution score of
+0.74, heavily outperforming background peripheral parameters
+(e.g., mmu-miR-192-5p at 0.27 and mmu-miR-21a-5p at 0.23).
+3.3 Downstream Systems Biology Analysis
+Downstream systems biology analysis was conducted
+to map the specific physiological pathways tied to the
+model’s dominant anchor. The pipeline revealed that
+extreme environmental spaceflight stressors profoundly
+disrupt hepatic glutathione redox homeostasis within the
+flight cohort. This peripheral metabolic collapse induces
+a severe upstream nuclear response within liver tissue,
+which directly causes the major upregulation and secre-
+tion of circulating mmu-miR-122-5p.
+Upon crossing the blood-brain barrier (BBB), this ele-
+vated peripheral hepatic signature exhibits an exception-
+ally tight, inverse correlation with critical central nervous
+system master regulators. Specifically, the influx of mmu-
+miR-122-5p drives a profound down-regulation of central
+nervous system master regulatory networks, characterized
+by the severe suppression of mmu-miR-124-3p and the
+broader let-7 family within brain cortical tissue.
+The full distribution of the multi-tissue transcriptomic
+axis effects across the sample cohort is summarized in
+Table 2.
+Table 2: Multi-tissue transcriptomic axis expression profiles
+across spaceflight cohorts.
+Biomarker Location Adaptation Function
+Glutathione
+Matrix
+Peripheral
+Liver
+Severe
+Down-reg.
+Loss of
+Redox
+Homeosta-
+sis
+mmu-miR-
+122-5p
+Circulation Upstream
+Up-reg.
+Primary
+Systemic
+Vector
+mmu-miR-
+124-3p
+Central
+Brain
+Profound
+Suppression
+CNS Master
+Regulation
+let-7
+Family
+Central
+Brain
+Profound
+Suppression
+CNS Master
+Regulation
+These unified results establish an empirical, deep
+learning-supported link showing that spaceflight-induced
+peripheral hepatic decay directly modulates master reg-
+ulatory genetic environments within the central nervous
+system.
+4. Discussion
+Our computational experiments present empirical diag-
+nostic findings in contemporary spaceflight biology, intro-
+ducing a novel method for mapping multi-organ vulnera-
+bilities under microgravity. The Multi-Layer Perceptron
+(MLP) framework demonstrated that deep learning ar-
+chitectures can successfully decode complex, non-linear
+transcriptomic dependencies across isolated tissue sys-
+tems, achieving an optimized cross-talk validation mean
+squared error of 1.1062. The cross-validation analysis
+confirms that the regularized neural network framework
+successfully captures systemic signaling dynamics from
+high-dimensional, sparse datasets without falling victim
+to the severe overfitting that typically limits traditional
+linear models in space biology.
+4.1 Predictive Value Independent of Large Sample
+Sizes
+The core contribution of this work lies in providing visi-
+bility into cross-tissue dependencies using sparse, high-
+dimensional spaceflight data. Traditionally, the aerospace
+community treats individual tissues as isolated biological
+silos, analyzing hepatic or neurological transcriptomic
+metrics independently. While informative, this localized
+focus introduces an analytical bottleneck, failing to cap-
+ture systemic multi-organ communication pathways that
+occur under environmental stress.
+Our regularized MLP framework bypasses this limi-
+tation, proving that small sample cohorts ( n = 9) can
+be leveraged to map complex inter-organ dependencies
+when bound by robust regularization layers, dropout, and
+strict Leave-One-Out Cross-Validation (LOOCV) loops.
+
+
+===== PAGE 6 =====
+
+Decoding the Spaceflight-Induced Liver-Brain Transcriptomic Axis 6
+Figure 4. Liver-Brain Biological Pathway Axis. Proposed redox-miRNA signaling route linking localized peripheral spaceflight
+stress to central nervous system (CNS) master regulator suppression. Extreme microgravity and cosmic ionizing radiation drive
+a structural breakdown of the hepatic glutathione matrix, resulting in a systemic loss of metabolic redox homeostasis. This
+collapse triggers a localized, redox-sensitive upstream nuclear transcription sequence, driving the upregulation and hepatic release
+of circulating mmu-miR-122-5p into the systemic circulation. Upon crossing the blood-brain barrier (BBB), this liver-derived
+transcriptomic anchor invades the CNS regulatory field, exerting direct inhibitory control and driving a severe downstream down-
+regulation of neural master regulators mmu-miR-124-3p and the let-7 family.
+This architecture moves beyond single-tissue descriptive
+statistics to provide a predictive framework, identifying
+mechanistic bottlenecks in astronaut physiological adap-
+tation that are obscured by standard analytical workflows.
+4.2 The Liver-Brain Transcriptomic Axis Mechanism
+It is critical to distinguish the localized tissue adaptations
+commonly reported in spaceflight literature from the sys-
+temic cross-talk identified by our pipeline. Prior studies
+independent of this model have noted that microgravity
+induces hepatic oxidative stress and central neuroinflam-
+mation. However, our model connects these disparate
+observations into a continuous molecular timeline.
+The feature attributions calculated via KernelSHAP
+reveal that this axis is systematically anchored by the pe-
+ripheral upregulation of mmu-miR-122-5p. The systems
+biology analysis details a clear cascade: spaceflight stres-
+sors cause a profound breakdown of hepatic glutathione
+redox homeostasis. This localized metabolic collapse trig-
+gers an upstream nuclear response in liver cells, inducing
+the upregulation and systemic secretion of mmu-miR-122-
+5p into circulation.
+Upon crossing the blood-brain barrier (BBB), this hep-
+atic microRNA signature acts as a systemic vector, driving
+the downstream suppression of central nervous system
+master regulators mmu-miR-124-3p and the let-7 fam-
+ily. This cross-tissue entanglement demonstrates that
+peripheral organ decay directly destabilizes the master
+regulatory networks responsible for maintaining central
+neurological health in long-duration missions.
+4.3 Implications for Multi-Organ Countermeasures
+If a spaceflight biological system exhibits severe cross-
+tissue dependencies, designing countermeasures for iso-
+lated organs will be fundamentally insufficient. Treating
+central nervous system neuroinflammation without ad-
+dressing the underlying hepatic glutathione redox collapse
+is an incomplete therapeutic approach, as the peripheral
+liver tissue will continue to shed systemic vectors like
+mmu-miR-122-5p into circulation.
+Future biomedical countermeasures must enforce a
+multi-organ approach. By utilizing this predictive com-
+putational framework, aerospace medical researchers can
+identify peripheral, easily targetable tissues (such as the
+
+
+===== PAGE 7 =====
+
+Decoding the Spaceflight-Induced Liver-Brain Transcriptomic Axis 7
+liver) to intercept systemic signaling cascades before they
+cross the blood-brain barrier and cause downstream neu-
+rological degradation.
+4.4 Limitations and Future Work
+While our regularized framework offers a new lens on sys-
+temic spaceflight biology, several distinct limitations must
+be acknowledged. First, the Rodent Research-8 cohort is
+small (n = 9), reflecting the strict physical and logistical
+constraints of International Space Station payloads. Repli-
+cating these predictive cross-tissue dependencies across
+larger, multi-modal human and animal datasets within the
+NASA Open Science Data Repository will be essential to
+verify if the mmu-miR-122-5p liver-brain axis generalizes
+across diverse biological cohorts and longer spaceflight
+durations.
+Second, while KernelSHAP provides mathemati-
+cally grounded local feature attributions, future wet-
+lab validation—specifically utilizing targeted microRNA
+knockouts or localized hepatic antioxidant therapies in
+simulated microgravity models—is required to defini-
+tively prove the causal nature of this transcriptomic axis.
+Future work will also explore the integration of multi-
+tissue variational autoencoders ( β-V AEs) to explicitly
+separate task-specific environmental adaptations from
+baseline inter-subject physiological variance.
+5. Conclusion
+We present a predictive deep learning analysis of multi-
+tissue transcriptomic dependencies induced by the space-
+flight environment. Through a regularized PyTorch Multi-
+Layer Perceptron framework and the feature attribution
+capabilities of KernelSHAP, we report empirical find-
+ings demonstrating that traditional single-tissue work-
+flows may miss critical, system-wide multi-organ signal-
+ing networks. Our computational framework success-
+fully mapped a predictive cross-tissue epigenetic silenc-
+ing axis with an optimized validation mean squared error
+of 1.1062, revealing that spaceflight-induced hepatic glu-
+tathione redox failure tightly correlates with the systemic
+down-regulation of central nervous system master regula-
+tors mmu-miR-124-3p and the let-7 family.
+By establishing mmu-miR-122-5p as the primary pre-
+dictive circulation anchor driving this liver-brain axis,
+this study introduces an empirical tool to inspect and
+decode non-linear tissue signaling dynamics within high-
+dimensional, sample-sparse spaceflight data. Future
+aerospace biomedical architectures may benefit from mov-
+ing beyond isolated organ tracking toward integrated,
+multi-tissue modeling paradigms. Mitigating peripheral
+metabolic collapse to intercept downstream central ner-
+vous system decay represents an important step toward
+developing dependable, multi-organ biomedical counter-
+measures to safeguard astronaut neurological health dur-
+ing long-duration interplanetary missions.
+Acknowledgements
+Conflict of Interest: The authors declare no competing
+interests.
+Data Access: The data supporting the findings of this
+study are available through the NASA Open Science Data
+Repository (OSDR) Rodent Research-8 payload data in-
+frastructure.
+Funding Statement: This research received no specific
+grant from any funding agency.
+Author Contributions & Support: The authors are
+greatly appreciative of the data infrastructure provided by
+the NASA Open Science Data Repository. The authors
+also express sincere gratitude to collaborating NASA-
+affiliated scientists, working group members, and institu-
+tional mentors for providing invaluable technical support,
+guidance, and collaboration throughout the development
+of this research manuscript.

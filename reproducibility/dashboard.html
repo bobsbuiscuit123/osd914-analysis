@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NASA miRNA Reproducibility Dashboard</title>
+  <style>
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #17212b; background: #eef2f5; }
+    main { max-width: 1180px; margin: 0 auto; padding: 24px; }
+    section { background: white; border: 1px solid #d8dee7; border-radius: 8px; padding: 18px; margin-bottom: 16px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+    img { max-width: 100%; border: 1px solid #d8dee7; border-radius: 6px; background: white; }
+    table { width: 100%; border-collapse: collapse; }
+    td { border-bottom: 1px solid #d8dee7; padding: 6px 0; }
+    td:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+  </style>
+</head>
+<body>
+  <main>
+    <section>
+      <h1>NASA miRNA Reproducibility Dashboard</h1>
+      <p>Leakage-free fold-wise LOOCV across fixed repeated seeds.</p>
+      <div class="grid">
+        <div><strong>VMSE mean:</strong> 1.7026</div>
+        <div><strong>VMSE std:</strong> 0.1397</div>
+        <div><strong>VMSE range:</strong> 1.4880-1.8820</div>
+        <div><strong>Seeds:</strong> 101, 202, 303, 404, 505</div>
+      </div>
+    </section>
+    <section class="grid">
+      <div>
+        <h2>Seed VMSE</h2>
+        <table><tr><td>101</td><td>1.8820</td></tr>
+<tr><td>202</td><td>1.7451</td></tr>
+<tr><td>303</td><td>1.6055</td></tr>
+<tr><td>404</td><td>1.4880</td></tr>
+<tr><td>505</td><td>1.7926</td></tr></table>
+      </div>
+      <div>
+        <h2>Liver Inputs</h2>
+        <ul><li>mmu-miR-122-5p</li>
+<li>mmu-miR-17-5p</li>
+<li>mmu-miR-18a-5p</li>
+<li>mmu-miR-19a-5p</li>
+<li>mmu-miR-20a-5p</li>
+<li>mmu-miR-92a-1-5p</li></ul>
+      </div>
+      <div>
+        <h2>Brain Targets</h2>
+        <ul><li>mmu-miR-124-3p</li>
+<li>mmu-let-7c-5p</li>
+<li>mmu-miR-26a-5p</li>
+<li>mmu-let-7a-5p</li>
+<li>mmu-let-7b-5p</li></ul>
+      </div>
+    </section>
+    <section class="grid">
+      <img src="figures/figure_2_loocv_residuals.png" alt="LOOCV residuals">
+      <img src="figures/figure_3_shap_importance.png" alt="SHAP feature importance">
+      <img src="figures/figure_4_brain_targets_by_cohort.png" alt="Brain targets by cohort">
+    </section>
+  </main>
+</body>
+</html>

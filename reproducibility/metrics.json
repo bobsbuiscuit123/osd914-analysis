@@ -1,0 +1,152 @@
+{
+  "clean_data": {
+    "brain_source": "GSE294046 brain miRNA columns",
+    "clean_brain_sha256": "104f97fdf4bb733804dc12879942eecc1c3ac7e74823b80d5efd3f2f20bccc0a",
+    "clean_brain_shape": [
+      9,
+      637
+    ],
+    "clean_liver_sha256": "a09597a8ba88227d579fcc012bfa812eda433fded815a21d05bfeef4c01793eb",
+    "clean_liver_shape": [
+      9,
+      717
+    ],
+    "count_filter_min_samples": 5,
+    "raw_brain_sample_columns": 25,
+    "raw_liver_sample_columns": 58,
+    "raw_mirna_rows": 1964,
+    "raw_mirna_sample_columns": 686
+  },
+  "cohort_counts": {
+    "FL": 3,
+    "HC": 3,
+    "VC": 3
+  },
+  "leakage_free": true,
+  "model": {
+    "batch_norm": "BatchNorm1d on hidden activations",
+    "dropout_rate": 0.3,
+    "epochs": 100,
+    "hidden_dim": 16,
+    "input_dim": 6,
+    "learning_rate": 0.01,
+    "loss": "MSE",
+    "optimizer": "Adam",
+    "output_dim": 5,
+    "weight_decay": 0.01
+  },
+  "normalization": "log1p plus z-score fitted inside each training fold only",
+  "outputs": {
+    "expression_group_summary_csv": "reproducibility/tables/expression_group_summary.csv",
+    "fold_metrics_csv": "reproducibility/tables/fold_metrics.csv",
+    "metrics_by_seed_csv": "reproducibility/tables/metrics_by_seed.csv",
+    "metrics_json": "reproducibility/metrics.json",
+    "predictions_csv": "reproducibility/tables/predictions.csv",
+    "shap_importance_summary_csv": "reproducibility/tables/shap_importance_summary.csv",
+    "shap_values_csv": "reproducibility/tables/shap_values.csv"
+  },
+  "packages": {
+    "matplotlib": "3.9.4",
+    "numpy": "2.0.2",
+    "pandas": "2.3.3",
+    "shap": "0.49.1",
+    "torch": "2.8.0"
+  },
+  "pipeline_version": 1,
+  "python": "3.9.6",
+  "raw_files": {
+    "brain_series_path": "GSE295428_series_matrix.txt.gz",
+    "brain_series_sha256": "1344e2157b025afcb050b353621383e7cea7a89d2df770ce13d14aae84ef401d",
+    "mirna_path": "GSE294046_miRNA_complete_quantification_raw.tsv.gz",
+    "mirna_sha256": "053342fd376cde1ef7673f0581253c50fd8fe5524fcd8aa5a4935f1ebdd9c7fb"
+  },
+  "repeated_seed_summary": {
+    "vmse_max": 1.8819584101438522,
+    "vmse_mean": 1.7026274296972488,
+    "vmse_min": 1.4880117624998093,
+    "vmse_std": 0.13968051205440987
+  },
+  "samples": [
+    {
+      "cohort": "FL",
+      "sample_id": "FL-LAR-1"
+    },
+    {
+      "cohort": "FL",
+      "sample_id": "FL-LAR-13"
+    },
+    {
+      "cohort": "FL",
+      "sample_id": "FL-LAR-5"
+    },
+    {
+      "cohort": "HC",
+      "sample_id": "HC-LAR-1"
+    },
+    {
+      "cohort": "HC",
+      "sample_id": "HC-LAR-13"
+    },
+    {
+      "cohort": "HC",
+      "sample_id": "HC-LAR-5"
+    },
+    {
+      "cohort": "VC",
+      "sample_id": "VC-LAR-1"
+    },
+    {
+      "cohort": "VC",
+      "sample_id": "VC-LAR-13"
+    },
+    {
+      "cohort": "VC",
+      "sample_id": "VC-LAR-5"
+    }
+  ],
+  "seed_results": [
+    {
+      "seed": 101,
+      "vmse": 1.8819584101438522
+    },
+    {
+      "seed": 202,
+      "vmse": 1.7450783252716064
+    },
+    {
+      "seed": 303,
+      "vmse": 1.6054868929915957
+    },
+    {
+      "seed": 404,
+      "vmse": 1.4880117624998093
+    },
+    {
+      "seed": 505,
+      "vmse": 1.7926017575793796
+    }
+  ],
+  "seeds": [
+    101,
+    202,
+    303,
+    404,
+    505
+  ],
+  "selected_brain_targets": [
+    "mmu-miR-124-3p",
+    "mmu-let-7c-5p",
+    "mmu-miR-26a-5p",
+    "mmu-let-7a-5p",
+    "mmu-let-7b-5p"
+  ],
+  "selected_liver_features": [
+    "mmu-miR-122-5p",
+    "mmu-miR-17-5p",
+    "mmu-miR-18a-5p",
+    "mmu-miR-19a-5p",
+    "mmu-miR-20a-5p",
+    "mmu-miR-92a-1-5p"
+  ],
+  "target_selection": "top 5 brain miRNAs by variance in the clean brain matrix"
+}

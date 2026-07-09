@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1350" viewBox="0 0 2400 1350">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<style>text{font-family:Arial,Helvetica,sans-serif;dominant-baseline:auto;} .small{letter-spacing:0;}</style>
+<text x="90" y="58" font-size="48" font-weight="700" fill="#14213d" text-anchor="start" dominant-baseline="hanging">Figure 1. Multi-Tissue Transcriptomic Architecture</text>
+<text x="92" y="118" font-size="25" font-weight="400" fill="#52616f" text-anchor="start" dominant-baseline="hanging">Hepatic high-dimensional omics matrices feed a regularized PyTorch MLP that predicts central brain miRNA regulators.</text>
+<line x1="90" y1="170" x2="2310" y2="170" stroke="#dce4ec" stroke-width="3" stroke-linecap="round"/>
+<rect x="95" y="235" width="555" height="845" rx="18" fill="#fbfcfe" fill-opacity="1.000" stroke="#c7d1dc" stroke-width="2"/>
+<text x="140" y="270" font-size="34" font-weight="700" fill="#14213d" text-anchor="start" dominant-baseline="hanging">Peripheral Liver Inputs</text>
+<rect x="150" y="405" width="435" height="180" rx="16" fill="#fff3dc" fill-opacity="1.000" stroke="#d39228" stroke-width="4"/>
+<text x="184" y="435" font-size="34" font-weight="700" fill="#92630f" text-anchor="start" dominant-baseline="hanging">Liver RNA-Seq</text>
+<text x="184" y="489" font-size="27" font-weight="400" fill="#17212b" text-anchor="start" dominant-baseline="hanging">expression matrix</text>
+<text x="184" y="521" font-size="27" font-weight="400" fill="#17212b" text-anchor="start" dominant-baseline="hanging">D &gt; 10,000</text>
+<rect x="442" y="463" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.471" stroke="#d39228" stroke-width="1"/>
+<rect x="469" y="463" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.565" stroke="#d39228" stroke-width="1"/>
+<rect x="496" y="463" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.659" stroke="#d39228" stroke-width="1"/>
+<rect x="523" y="463" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.753" stroke="#d39228" stroke-width="1"/>
+<rect x="550" y="463" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.847" stroke="#d39228" stroke-width="1"/>
+<rect x="442" y="490" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.471" stroke="#d39228" stroke-width="1"/>
+<rect x="469" y="490" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.565" stroke="#d39228" stroke-width="1"/>
+<rect x="496" y="490" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.659" stroke="#d39228" stroke-width="1"/>
+<rect x="523" y="490" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.753" stroke="#d39228" stroke-width="1"/>
+<rect x="550" y="490" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.847" stroke="#d39228" stroke-width="1"/>
+<rect x="442" y="517" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.471" stroke="#d39228" stroke-width="1"/>
+<rect x="469" y="517" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.565" stroke="#d39228" stroke-width="1"/>
+<rect x="496" y="517" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.659" stroke="#d39228" stroke-width="1"/>
+<rect x="523" y="517" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.753" stroke="#d39228" stroke-width="1"/>
+<rect x="550" y="517" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.847" stroke="#d39228" stroke-width="1"/>
+<rect x="442" y="544" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.471" stroke="#d39228" stroke-width="1"/>
+<rect x="469" y="544" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.565" stroke="#d39228" stroke-width="1"/>
+<rect x="496" y="544" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.659" stroke="#d39228" stroke-width="1"/>
+<rect x="523" y="544" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.753" stroke="#d39228" stroke-width="1"/>
+<rect x="550" y="544" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.847" stroke="#d39228" stroke-width="1"/>
+<rect x="150" y="715" width="435" height="180" rx="16" fill="#fff3dc" fill-opacity="1.000" stroke="#d39228" stroke-width="4"/>
+<text x="184" y="745" font-size="34" font-weight="700" fill="#92630f" text-anchor="start" dominant-baseline="hanging">Liver Epigenetic</text>
+<text x="184" y="799" font-size="27" font-weight="400" fill="#17212b" text-anchor="start" dominant-baseline="hanging">chromatin matrix</text>
+<text x="184" y="831" font-size="27" font-weight="400" fill="#17212b" text-anchor="start" dominant-baseline="hanging">D &gt; 10,000</text>
+<rect x="442" y="773" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.471" stroke="#d39228" stroke-width="1"/>
+<rect x="469" y="773" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.565" stroke="#d39228" stroke-width="1"/>
+<rect x="496" y="773" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.659" stroke="#d39228" stroke-width="1"/>
+<rect x="523" y="773" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.753" stroke="#d39228" stroke-width="1"/>
+<rect x="550" y="773" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.847" stroke="#d39228" stroke-width="1"/>
+<rect x="442" y="800" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.471" stroke="#d39228" stroke-width="1"/>
+<rect x="469" y="800" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.565" stroke="#d39228" stroke-width="1"/>
+<rect x="496" y="800" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.659" stroke="#d39228" stroke-width="1"/>
+<rect x="523" y="800" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.753" stroke="#d39228" stroke-width="1"/>
+<rect x="550" y="800" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.847" stroke="#d39228" stroke-width="1"/>
+<rect x="442" y="827" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.471" stroke="#d39228" stroke-width="1"/>
+<rect x="469" y="827" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.565" stroke="#d39228" stroke-width="1"/>
+<rect x="496" y="827" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.659" stroke="#d39228" stroke-width="1"/>
+<rect x="523" y="827" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.753" stroke="#d39228" stroke-width="1"/>
+<rect x="550" y="827" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.847" stroke="#d39228" stroke-width="1"/>
+<rect x="442" y="854" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.471" stroke="#d39228" stroke-width="1"/>
+<rect x="469" y="854" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.565" stroke="#d39228" stroke-width="1"/>
+<rect x="496" y="854" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.659" stroke="#d39228" stroke-width="1"/>
+<rect x="523" y="854" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.753" stroke="#d39228" stroke-width="1"/>
+<rect x="550" y="854" width="20" height="20" rx="4" fill="#d39228" fill-opacity="0.847" stroke="#d39228" stroke-width="1"/>
+<ellipse cx="690.0" cy="650.0" rx="20.0" ry="20.0" fill="#e7f3f2" fill-opacity="1.000" stroke="#1f5155" stroke-width="4"/>
+<line x1="585" y1="495" x2="670" y2="650" stroke="#1f5155" stroke-width="7" stroke-linecap="round"/>
+<line x1="585" y1="805" x2="670" y2="650" stroke="#1f5155" stroke-width="7" stroke-linecap="round"/>
+<text x="628" y="695" font-size="24" font-weight="400" fill="#1f5155" text-anchor="middle" dominant-baseline="hanging">feature
+fusion</text>
+<rect x="720" y="235" width="960" height="845" rx="22" fill="#e7f3f2" fill-opacity="1.000" stroke="#2f6f73" stroke-width="4"/>
+<text x="765" y="270" font-size="38" font-weight="700" fill="#1f5155" text-anchor="start" dominant-baseline="hanging">PyTorch MLP</text>
+<text x="765" y="322" font-size="27" font-weight="400" fill="#52616f" text-anchor="start" dominant-baseline="hanging">fully connected layers interwoven with p = 0.5 Dropout</text>
+<line x1="710" y1="650" x2="755.7" y2="650.0" stroke="#1f5155" stroke-width="7" stroke-linecap="round"/>
+<polygon points="770.0,650.0 751.4,661.8 751.4,638.2" fill="#1f5155"/>
+<rect x="770" y="585" width="120" height="130" rx="14" fill="#e9f1fb" fill-opacity="1.000" stroke="#527aa3" stroke-width="4"/>
+<text x="830.0" y="621" font-size="27" font-weight="400" fill="#17212b" text-anchor="middle" dominant-baseline="hanging">Input</text>
+<text x="830.0" y="652" font-size="27" font-weight="400" fill="#17212b" text-anchor="middle" dominant-baseline="hanging">vector</text>
+<rect x="925" y="570" width="120" height="160" rx="14" fill="#ffffff" fill-opacity="1.000" stroke="#2f6f73" stroke-width="4"/>
+<text x="985.0" y="621" font-size="27" font-weight="700" fill="#17212b" text-anchor="middle" dominant-baseline="hanging">FC</text>
+<text x="985.0" y="652" font-size="27" font-weight="700" fill="#17212b" text-anchor="middle" dominant-baseline="hanging">512</text>
+<rect x="1080" y="570" width="135" height="160" rx="14" fill="#fbe8e3" fill-opacity="1.000" stroke="#c85a4a" stroke-width="4"/>
+<text x="1147.5" y="621" font-size="27" font-weight="400" fill="#17212b" text-anchor="middle" dominant-baseline="hanging">Dropout</text>
+<text x="1147.5" y="652" font-size="27" font-weight="400" fill="#17212b" text-anchor="middle" dominant-baseline="hanging">p = 0.5</text>
+<rect x="1250" y="570" width="120" height="160" rx="14" fill="#ffffff" fill-opacity="1.000" stroke="#2f6f73" stroke-width="4"/>
+<text x="1310.0" y="621" font-size="27" font-weight="700" fill="#17212b" text-anchor="middle" dominant-baseline="hanging">FC</text>
+<text x="1310.0" y="652" font-size="27" font-weight="700" fill="#17212b" text-anchor="middle" dominant-baseline="hanging">128</text>
+<rect x="1405" y="570" width="135" height="160" rx="14" fill="#fbe8e3" fill-opacity="1.000" stroke="#c85a4a" stroke-width="4"/>
+<text x="1472.5" y="621" font-size="27" font-weight="400" fill="#17212b" text-anchor="middle" dominant-baseline="hanging">Dropout</text>
+<text x="1472.5" y="652" font-size="27" font-weight="400" fill="#17212b" text-anchor="middle" dominant-baseline="hanging">p = 0.5</text>
+<rect x="1555" y="585" width="120" height="130" rx="14" fill="#ffffff" fill-opacity="1.000" stroke="#2f6f73" stroke-width="4"/>
+<text x="1615.0" y="621" font-size="27" font-weight="700" fill="#17212b" text-anchor="middle" dominant-baseline="hanging">Output</text>
+<text x="1615.0" y="652" font-size="27" font-weight="700" fill="#17212b" text-anchor="middle" dominant-baseline="hanging">head</text>
+<line x1="890" y1="650" x2="913.3" y2="650.0" stroke="#1f5155" stroke-width="5" stroke-linecap="round"/>
+<polygon points="925.0,650.0 909.8,659.6 909.8,640.4" fill="#1f5155"/>
+<line x1="1045" y1="650" x2="1068.3" y2="650.0" stroke="#1f5155" stroke-width="5" stroke-linecap="round"/>
+<polygon points="1080.0,650.0 1064.8,659.6 1064.8,640.4" fill="#1f5155"/>
+<line x1="1215" y1="650" x2="1238.3" y2="650.0" stroke="#1f5155" stroke-width="5" stroke-linecap="round"/>
+<polygon points="1250.0,650.0 1234.8,659.6 1234.8,640.4" fill="#1f5155"/>
+<line x1="1370" y1="650" x2="1393.3" y2="650.0" stroke="#1f5155" stroke-width="5" stroke-linecap="round"/>
+<polygon points="1405.0,650.0 1389.8,659.6 1389.8,640.4" fill="#1f5155"/>
+<line x1="1540" y1="650" x2="1543.3" y2="650.0" stroke="#1f5155" stroke-width="5" stroke-linecap="round"/>
+<polygon points="1555.0,650.0 1539.8,659.6 1539.8,640.4" fill="#1f5155"/>
+<text x="1222" y="820" font-size="25" font-weight="400" fill="#1f5155" text-anchor="middle" dominant-baseline="hanging">regularized small-n omics mapping</text>
+<rect x="1750" y="235" width="555" height="845" rx="18" fill="#fbfcfe" fill-opacity="1.000" stroke="#c7d1dc" stroke-width="2"/>
+<text x="1795" y="270" font-size="34" font-weight="700" fill="#14213d" text-anchor="start" dominant-baseline="hanging">Central Brain Predictions</text>
+<text x="1797" y="322" font-size="27" font-weight="400" fill="#52616f" text-anchor="start" dominant-baseline="hanging">master regulator targets</text>
+<line x1="1675" y1="650" x2="1781.1" y2="650.0" stroke="#1f5155" stroke-width="8" stroke-linecap="round"/>
+<polygon points="1798.0,650.0 1776.0,663.9 1776.0,636.1" fill="#1f5155"/>
+<line x1="1798" y1="530" x2="1798" y2="770" stroke="#1f5155" stroke-width="6" stroke-linecap="round"/>
+<rect x="1842" y="445" width="395" height="170" rx="16" fill="#e9f1fb" fill-opacity="1.000" stroke="#527aa3" stroke-width="4"/>
+<text x="1872" y="480" font-size="35" font-weight="700" fill="#17212b" text-anchor="start" dominant-baseline="hanging">mmu-miR-124-3p</text>
+<text x="2039.5" y="534" font-size="24" font-weight="400" fill="#52616f" text-anchor="middle" dominant-baseline="hanging">neuronal identity / CNS</text>
+<text x="2039.5" y="562" font-size="24" font-weight="400" fill="#52616f" text-anchor="middle" dominant-baseline="hanging">regulator</text>
+<line x1="1798" y1="530" x2="1829.0" y2="530.0" stroke="#1f5155" stroke-width="6" stroke-linecap="round"/>
+<polygon points="1842.0,530.0 1825.1,540.7 1825.1,519.3" fill="#1f5155"/>
+<rect x="1842" y="685" width="395" height="170" rx="16" fill="#e8f5ea" fill-opacity="1.000" stroke="#4b8a54" stroke-width="4"/>
+<text x="1872" y="720" font-size="35" font-weight="700" fill="#17212b" text-anchor="start" dominant-baseline="hanging">let-7 family</text>
+<text x="2039.5" y="774" font-size="24" font-weight="400" fill="#52616f" text-anchor="middle" dominant-baseline="hanging">neurodevelopmental regulatory</text>
+<text x="2039.5" y="802" font-size="24" font-weight="400" fill="#52616f" text-anchor="middle" dominant-baseline="hanging">program</text>
+<line x1="1798" y1="770" x2="1829.0" y2="770.0" stroke="#1f5155" stroke-width="6" stroke-linecap="round"/>
+<polygon points="1842.0,770.0 1825.1,780.7 1825.1,759.3" fill="#1f5155"/>
+</svg>

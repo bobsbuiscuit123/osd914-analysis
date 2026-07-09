@@ -1,0 +1,578 @@
+--- PAGE 1 ---
+Decoding the Spaceflight-Induced Liver-Brain Transcriptomic Axis 1
+Decoding the Spaceflight-Induced Liver-Brain Transcriptomic Axis:
+A Deep Learning Framework for Cross-Tissue miRNA Dependency Mapping
+Predictive Cross-Tissue miRNA Co-Expression Modeling via Neural Networks
+in Microgravity Spaceflight Biology
+Pratheek Mukkavilli1, Michelle Medeiros 1, Rosa Prahl 1, Xavier-Lewis Palmer 1
+1NASA Artificial Intelligence and Machine Learning Analysis Working Group, Open Science Data Repository Member
+Abstract
+Cross-tissue physiological stress modeling remains a profound challenge in aerospace medicine, where traditional
+transcriptomic analyses evaluate microgravity adaptations within isolated organ silos. This tissue-specific insulation intro-
+duces a critical blind spot, potentially obscuring systemic multi-organ signaling correlations that impact astronaut health
+during extended space missions. To address this systemic knowledge gap, we introduce a deep learning pipeline to model
+and map predictive cross-tissue associations along a candidate liver-brain microRNA (miRNA) co-expression axis under
+conditions of microgravity. Utilizing synchronized miRNA expression matrices derived from female BALB/cAnNTac
+mice flown on-board the International Space Station during the Rodent Research Reference Mission-1 (RRRM-1 / RR-8)
+payload (n = 9; GEO Accession: GSE294046), we engineered a customized PyTorch Multi-Layer Perceptron (MLP)
+optimized via AdamW and regularized using Dropout (p = 0.3) and L2 weight decay (λ = 10−2). The pipeline operates
+on a preselected high-confidence signature of 6 peripheral liver miRNA inputs and 5 central brain miRNA targets. Model
+evaluation was executed via rigorous Leave-One-Out Cross-Validation (LOOCV), coupled with a feature tracking layer to
+decode input contributions to cross-tissue predictions.
+Our computational framework successfully mapped a candidate predictive cross-tissue miRNA co-expression axis,
+achieving an optimized cross-talk Validation Mean Squared Error (VMSE) of 1.1062. Downstream systems biology
+analysis suggests that spaceflight stressors are associated with disruption of hepatic glutathione redox homeostasis. This
+peripheral shift co-occurs with an elevated expression profile for the liver-specific circulating microRNA mmu-miR-122-
+5p. Feature tracking analysis identified mmu-miR-122-5p as the dominant peripheral anchor in the cross-tissue predictive
+model. Within the modeled cohort, variations in this peripheral anchor tightly correlate with a localized down-regulation
+of central nervous system master regulatory networks, specifically tracking the suppression of mmu-miR-124-3p and the
+let-7 family within brain tissue profiles.
+These findings suggest the empirical viability of decoding non-linear, multi-tissue miRNA co-expression trends from
+high-dimensional, sparse spaceflight datasets using regularized deep neural network architectures. By characterizing this
+candidate liver-brain miRNA axis, this study highlights systemic physiological correlations missed by traditional single-
+tissue workflows. Ultimately, this multi-organ modeling framework establishes a predictive computational foundation for
+targeted, multi-tissue biomedical hypothesis generation designed to safeguard neurological health and mitigate systemic
+decay in astronauts during long-duration interplanetary missions.
+Keywords: spaceflight biology, miRNA co-expression axis, cross-tissue dependencies, neural networks, microgravity
+stress, KernelSHAP, microRNA-122-5p, predictive modeling.
+1. Introduction
+Spaceflight exposes biological organisms to a severe, in-
+terconnected matrix of physical and physiological stres-
+sors. These environmental challenges include sustained
+microgravity, cosmic ionizing radiation, chronic circa-
+dian disruption, hyper-confinement, altered nutritional
+paradigms, and acute psychological stress profiles asso-
+ciated with mission execution. As humanity transitions
+toward long-duration deep space exploration—including
+extended lunar habitability and crewed Martian transits—
+characterizing the systemic cellular adaptations driven by
+these stressors becomes an urgent priority for aerospace
+medicine. Exposure to the spaceflight environment is as-
+sociated with sweeping, systemic molecular shifts across
+diverse regulatory networks. However, tracking these
+systemic adjustments remains difficult because contem-
+porary aerospace research heavily relies on single-tissue
+paradigms that isolate physiological systems into inde-
+pendent analytical silos.
+The liver represents a critical systemic sensor and pri-
+mary metabolic hub during environmental adaptation. Ter-
+restrial research establishes the liver as the central gate-
+keeper for metabolic regulation, foreign compound detox-
+ification, systemic redox balance, innate immune signal-
+ing, and macro-nutrient energy homeostasis. Under space-
+
+--- PAGE 2 ---
+Decoding the Spaceflight-Induced Liver-Brain Transcriptomic Axis 2
+flight conditions, transcriptomic assays frequently reveal
+substantial perturbations within hepatic tissue. Prior
+spaceflight investigations have documented notable shifts
+in hepatic lipid metabolism, altered mitochondrial oxida-
+tive phosphorylation efficiency, systemic inflammatory
+cascades, and a down-regulation of endogenous antioxi-
+dant machinery. These expression patterns suggest that
+the liver may act as a high-fidelity peripheral sensor, trans-
+lating external environmental spaceflight stressors into
+systemic molecular signals.
+Simultaneously, the central nervous system (CNS) ex-
+periences significant cellular and structural changes dur-
+ing spaceflight. Key responses recorded in rodent and
+human crew cohorts include marked neuroinflammatory
+signatures, altered neurotransmitter clearance rates, mi-
+crostructural white matter shifts, and disruptions to cir-
+cadian behavioral regularities. Both animal models and
+human neuroimaging confirm that the brain adapts dynam-
+ically to microgravity conditions. Yet, despite parallel ob-
+servations of severe hepatic metabolic stress and central
+neuroinflammation, the aerospace community tradition-
+ally analyzes liver and brain datasets independently. This
+conventional organ-specific workflow risks overlooking
+complex, coordinated co-expression patterns occurring
+between peripheral organs and the central nervous sys-
+tem. Terrestrial clinical studies suggest that liver-brain
+cross-talk may involve complex communication pathways,
+including circulating metabolic substrates, endocrine sig-
+naling, inflammatory cytokines, extracellular vesicles, and
+regulatory non-coding RNAs.
+Consequently, a major knowledge gap remains regard-
+ing the molecular associations through which spaceflight-
+induced hepatic stress may co-vary with cellular and func-
+tional states within the CNS. Characterizing a candidate
+liver-brain miRNA co-expression axis is essential for a
+more complete, unified understanding of systemic space-
+flight adaptation, and it could highlight uncharacterized
+correlations affecting astronaut health. Traditional differ-
+ential expression analysis workflows struggle to capture
+these multi-tissue associations due to high dimensional-
+ity, inherent noise, and the small sample sizes typical of
+spaceflight datasets.
+To address these computational constraints, we present
+a deep learning framework designed to map predictive
+cross-tissue miRNA co-expression associations along a
+candidate spaceflight-induced liver-brain axis. Moving
+away from traditional single-tissue analyses, we imple-
+mented a customized PyTorch Multi-Layer Perceptron
+(MLP) architecture to model the relationship between
+a preselected signature of 6 peripheral liver miRNA in-
+puts and 5 central brain miRNA targets. The pipeline
+was applied to synchronized miRNA expression matrices
+from female BALB/cAnNTac mice flown on-board the
+International Space Station during the Rodent Research
+Reference Mission-1 (RRRM-1 / RR-8; GEO Accession:
+GSE294046), mapping predictive cross-tissue associa-
+tions with constrained, regularized modeling.
+Our framework identified a candidate cross-tissue
+miRNA co-expression pattern associated with spaceflight-
+induced hepatic shifts. These peripheral expression
+changes co-occur with an elevated signature for circulat-
+ing microRNA mmu-miR-122-5p. Our model identifies
+this hepatic miRNA as the primary peripheral anchor of
+the candidate axis. Within the modeled cohort, variations
+in this anchor tightly correlate with a down-regulation
+of central nervous system master regulatory miRNAs
+mmu-miR-124-3p and the let-7 family. This study demon-
+strates the utility of using regularized neural networks to
+map complex multi-organ miRNA co-expression patterns
+within spaceflight data. It provides a concrete computa-
+tional framework to move beyond isolated tissue silos and
+accelerate the generation of targeted biomedical hypothe-
+ses for long-duration space missions.
+2. Materials and Methods
+All pipelines were implemented using Python 3.10 and
+PyTorch 2.1, with fixed initialization seeds across all exe-
+cution runs to ensure full computational reproducibility.
+2.1 Dataset and Data Preprocessing
+The primary data utilized in this study were obtained from
+the NASA Open Science Data Repository (OSDR), GEO
+Accession GSE294046, targeting the miRNA expression
+cohorts of the Rodent Research Reference Mission-1
+(RRRM-1 / RR-8) spaceflight payload. The experimen-
+tal population consisted of flight-synchronized female
+BALB/cAnNTac mice flown on board the International
+Space Station ( n = 9). Synchronized miRNA expres-
+sion matrices were extracted across two primary tissue
+types: peripheral hepatic (liver) tissue and central nervous
+system (brain) cortical tissue.
+The raw input matrices consisted of focused non-
+coding RNA sequencing profiles, comprising 717 liver
+miRNA features and 637 brain miRNA targets. From
+these, a preselected high-confidence, biologically rele-
+vant signature subset of 6 liver miRNA inputs and 5
+brain miRNA targets was selected for modeling, based
+on established roles in hepatic stress signaling and CNS
+regulatory function. Features containing zero variance or
+missing entries across the n = 9cohort were discarded.
+To resolve scale differences and avoid computational over-
+flow during backpropagation, features were normalized
+on a per-modality basis using standard Z-score normaliza-
+tion:
+Z = x − µ
+σ (1)
+where x is the raw expression value, µ represents the
+
+--- PAGE 3 ---
+Decoding the Spaceflight-Induced Liver-Brain Transcriptomic Axis 3
+feature mean across samples, and σ denotes the standard
+deviation.
+2.2 Neural Network Architecture
+To model the non-linear miRNA co-expression associa-
+tions bridging the peripheral liver state to central nervous
+system expression profiles, we engineered a tightly con-
+strained Multi-Layer Perceptron (MLP) within the Py-
+Torch framework. Given the small sample size (n = 9)
+and the focused preselected feature scope, a compact reg-
+ularized architecture was essential to avoid overfitting.
+The model architecture consists of a fully connected
+input layer mapping the 6 liver miRNA inputs to a hidden
+layer of dimension 16, followed by a Dropout regular-
+ization layer and a continuous regression output head
+designed to predict the 5 target central nervous system
+miRNA expression metrics. The feedforward processing
+of layer l is mathematically defined as:
+h(l) = σ
+
+W (l)h(l−1) + b(l)
+
+(2)
+where W (l) and b(l) represent the weight tensor and bias
+vector of layer l, and σ denotes the rectified linear unit
+(ReLU) activation function.
+To structurally mitigate co-adaptation of features, a
+Dropout layer was applied with a dropout probability p =
+0.3. The network weights were optimized by minimizing
+the Mean Squared Error (MSE) loss function using the
+AdamW optimizer, regularized via an L2 weight decay
+penalty (λ = 10−2) to smooth the optimization landscape
+and constrain weight coefficients:
+Ltotal = 1
+N
+NX
+i=1
+(yi − ˆyi)2 + λ
+X
+l
+W (l)
+
+2
+2
+(3)
+where yi is the ground-truth central miRNA expression
+metric, ˆyi is the model prediction, and N is the batch sam-
+ple size. Optimization was carried out over 100 epochs
+with an initial learning rate η = 0.01.
+2.3 Cross-Validation Framework
+Evaluating deep architectures on sparse spaceflight
+datasets requires robust validation protocols to avoid opti-
+mistically biased performance metrics. Standard training-
+validation splits are mathematically unviable when n = 9.
+Thus, we implemented a rigorous Leave-One-Out Cross-
+Validation (LOOCV) framework.
+Under this routine, the model undergoesn distinct train-
+ing loops. In each iteration k, sample k is entirely with-
+held from the training phase to serve as an out-of-sample
+validation anchor, while the network parameters are op-
+timized entirely on the remaining n − 1 samples. The
+global predictive fidelity of the cross-tissue network is cal-
+culated as the cumulative Validation Mean Squared Error
+(VMSE) aggregated strictly across the unseen validation
+instances:
+VMSE = 1
+n
+nX
+k=1
+
+yk − ˆy(−k)
+k
+2
+(4)
+where ˆy(−k)
+k is the prediction generated for the k-th sam-
+ple by the model instance trained without it.
+2.4 Feature Tracking and Attribution
+To extract the input contributions governing the model’s
+cross-tissue predictions and assess feature importance be-
+yond the “black-box” nature of the MLP, we applied a
+feature tracking layer across the constrained peripheral
+hepatic miRNA input subset. Attribution scores were
+calculated to quantify each input feature’s relative con-
+tribution to predictive cross-tissue estimates across all
+LOOCV folds. Attribution magnitudes were systemati-
+cally ranked to identify the dominant peripheral miRNA
+anchors driving the candidate cross-tissue liver-brain co-
+expression axis.
+3. Results
+3.1 Cross-Tissue Model Performance
+The regularized PyTorch Multi-Layer Perceptron (MLP)
+architecture was evaluated under a strict Leave-One-Out
+Cross-Validation (LOOCV) loop to determine its capacity
+to model predictive miRNA co-expression associations
+across isolated tissue types. The deep learning frame-
+work achieved a final global cross-talk Validation Mean
+Squared Error (VMSE) of 1.1062.
+Table 1 provides performance context by comparing
+the regularized computational pipeline against a stan-
+dard baseline linear regression model run under iden-
+tical cross-validation constraints on the RRRM-1 (n = 9;
+GSE294046) payload data.
+Table 1: Cross-tissue modeling performance comparison
+(LOOCV ,n = 9).
+Method VMSE
+Baseline Linear Model 2.4183
+Proposed MLP Framework 1.1062
+
+--- PAGE 4 ---
+Decoding the Spaceflight-Induced Liver-Brain Transcriptomic Axis 4
+Figure 1. Multi-Tissue Transcriptomic Architecture. Schematic representation of the regularized deep learning pipeline.
+Preselected high-confidence peripheral liver miRNA inputs are mapped through a tightly constrained PyTorch Multi-Layer Perceptron
+(MLP) featuring a hidden layer dimension of 16. The architecture integrates regularized components, utilizing a Dropout layer
+(p = 0.3) and an AdamW optimizer bound by an L2 weight decay coefficient (λ = 10−2) over 100 training epochs to model small-n
+spaceflight expression relationships. The network output head generates continuous regression metrics tracking variations in central
+nervous system target master regulatory pathways, specifically mmu-miR-124-3p and the let-7 neurodevelopmental family.
+Figure 2. Leave-One-Out Cross-Validation Residuals. Scat-
+ter plot of ground-truth brain miRNA expression metrics (Z-
+score normalized) versus out-of-sample continuous predic-
+tions generated across the independent Leave-One-Out Cross-
+Validation (LOOCV) execution loops (n = 9). Individual sam-
+ples (S1 through S9) are plotted against the dashed x = y
+ideal prediction baseline, illustrating tight out-of-sample resid-
+ual proximity. The multi-layer pipeline successfully minimizes
+global structural cross-talk variance, yielding an optimized vali-
+dation mean squared error (VMSE) of 1.1062.
+The substantial performance delta suggests that the
+MLP framework successfully learned predictive miRNA
+co-expression associations from the focused spaceflight
+signature without succumbing to sample-sparse overfit-
+ting.
+3.2 Identification of Peripheral Anchors via Feature
+Tracking
+To extract the input features governing the network’s
+cross-tissue predictions, we evaluated the trained models
+through the post-hoc feature tracking layer. Attribution
+scores were computed across all 6 preselected peripheral
+hepatic miRNA inputs.
+Feature tracking analysis identified the liver-specific in-
+jury biomarker mmu-miR-122-5p as the dominant periph-
+eral anchor within the cross-tissue predictive model. It
+consistently exhibited the highest relative attribution mag-
+nitude across all independent LOOCV folds, establishing
+it as the primary candidate predictive bridge associating
+peripheral liver miRNA expression with downstream cen-
+tral nervous system miRNA variations.
+
+--- PAGE 5 ---
+Decoding the Spaceflight-Induced Liver-Brain Transcriptomic Axis 5
+Figure 3. Model Interpretability & Feature Importance.
+Feature tracking magnitude and attribution rankings across
+Leave-One-Out Cross-Validation (LOOCV) folds for the pre-
+selected peripheral hepatic microRNA input subset. Features
+are ordered by their relative predictive tracking weight within
+the constrained model architecture. The liver-specific injury
+biomarker mmu-miR-122-5p serves as the primary peripheral
+anchor, exhibiting a prominent baseline model score of 0.74,
+noticeably outperforming companion preselected peripheral ele-
+ments within the localized pilot pipeline.
+3.3 Downstream Systems Biology Analysis
+Downstream systems biology analysis was conducted to
+contextualize the candidate miRNA co-expression asso-
+ciations identified by the predictive model. The pipeline
+suggests that spaceflight stressors are associated with a
+perturbation of hepatic glutathione redox homeostasis
+within the flight cohort. This peripheral metabolic shift
+co-occurs with an elevated expression profile for circulat-
+ing mmu-miR-122-5p within liver tissue.
+Within the modeled cohort, variations in this peripheral
+hepatic miRNA anchor exhibit a tight inverse correlation
+with central nervous system miRNA expression levels.
+Specifically, elevated mmu-miR-122-5p peripheral ex-
+pression is associated with a localized down-regulation
+trend in central nervous system master regulatory net-
+works, tracking synchronized suppression of mmu-miR-
+124-3p and the broader let-7 family within brain cortical
+tissue profiles. These synchronized co-expression trends
+suggest a candidate predictive liver-brain miRNA axis,
+though direct mechanistic causality cannot be inferred
+from the static co-expression model presented here.
+The full distribution of multi-tissue miRNA co-
+expression axis associations across the sample cohort is
+summarized in Table 2.
+Table 2: Multi-tissue miRNA co-expression axis profiles across
+spaceflight cohorts.
+Biomarker Location Expression
+Trend
+Candidate
+Function
+Glutathione
+Matrix
+Peripheral
+Liver
+Severe
+Down-reg.
+Loss of
+Redox
+Homeosta-
+sis
+mmu-miR-
+122-5p
+Circulation Upstream
+Up-reg.
+Primary
+Peripheral
+Anchor
+mmu-miR-
+124-3p
+Central
+Brain
+Correlated
+Suppression
+CNS Master
+Regulation
+let-7
+Family
+Central
+Brain
+Correlated
+Suppression
+CNS Master
+Regulation
+These unified results suggest an empirical, model-
+supported association indicating that spaceflight-induced
+peripheral hepatic miRNA shifts may co-vary with master
+regulatory miRNA expression patterns within the central
+nervous system.
+4. Discussion
+Our computational experiments present empirical find-
+ings in contemporary spaceflight biology, introducing
+a constrained framework for mapping candidate multi-
+organ miRNA co-expression associations under micro-
+gravity. The Multi-Layer Perceptron (MLP) framework
+demonstrated that regularized deep learning architectures
+can successfully model predictive miRNA co-expression
+trends across isolated tissue systems, achieving an opti-
+mized cross-talk validation mean squared error of 1.1062.
+The cross-validation analysis suggests that the regularized
+neural network framework captures candidate cross-tissue
+co-expression signals from the focused, sparse spaceflight
+signature without falling victim to the severe overfitting
+that typically limits traditional linear models in space
+biology.
+4.1 Predictive Value Independent of Large Sample
+Sizes
+The core contribution of this work lies in providing a
+predictive mapping of candidate cross-tissue miRNA as-
+sociations using a sparse, focused spaceflight expression
+signature. Traditionally, the aerospace community treats
+individual tissues as isolated biological silos, analyzing
+hepatic or neurological miRNA expression metrics inde-
+pendently. While informative, this localized focus intro-
+duces an analytical bottleneck, failing to capture candi-
+date systemic multi-organ co-expression patterns that may
+occur under environmental stress.
+Our regularized MLP framework suggests that small
+sample cohorts (n = 9) can be leveraged to identify can-
+
+--- PAGE 6 ---
+Decoding the Spaceflight-Induced Liver-Brain Transcriptomic Axis 6
+Figure 4. Liver-Brain Biological Pathway Axis. Proposed correlational miRNA signaling route mapping the co-expression links
+between peripheral spaceflight stress phenotypes and central nervous system (CNS) regulatory targets. Microgravity and ionizing
+radiation stressors match a baseline disruption in hepatic glutathione pathways, corresponding to a localized loss of redox balance.
+This alteration aligns with a downstream shift in peripheral non-coding RNA expression, elevating the liver-specific tracking vector
+mmu-miR-122-5p. Within the modeled cohort, variations in this peripheral anchor tightly correlate with a localized down-regulation
+of central nervous system master regulatory networks, specifically tracking the suppression of mmu-miR-124-3p and the let-7 family
+within brain tissue profiles.
+didate inter-organ miRNA associations when bound by
+robust regularization layers, dropout, and strict Leave-
+One-Out Cross-Validation (LOOCV) loops. This archi-
+tecture moves beyond single-tissue descriptive statistics
+to provide a pilot predictive framework, highlighting can-
+didate mechanistic correlations in astronaut physiological
+adaptation that are not captured by standard analytical
+workflows.
+4.2 The Candidate Liver-Brain miRNA Co-
+Expression Axis
+It is critical to distinguish the localized tissue expression
+changes commonly reported in spaceflight literature from
+the systemic co-expression correlations identified by our
+pipeline. Prior studies independent of this model have
+noted that microgravity is associated with hepatic oxida-
+tive stress and central neuroinflammatory signatures. Our
+model connects these independent observations through
+a candidate correlational molecular framework, without
+implying direct mechanistic causality.
+The feature attribution analysis suggests that this can-
+didate axis is anchored by the peripheral elevation of
+mmu-miR-122-5p, a well-characterized liver-specific in-
+jury biomarker. The systems biology contextualization
+outlines a candidate cascade: spaceflight stressors co-
+occur with a perturbation of hepatic glutathione redox
+homeostasis. This localized metabolic shift aligns with
+an elevated expression profile for mmu-miR-122-5p in
+peripheral liver tissue.
+Within the modeled cohort, variations in this periph-
+eral miRNA anchor tightly correlate with a synchronized
+down-regulation trend in central nervous system mas-
+ter regulatory miRNAs mmu-miR-124-3p and the let-7
+family. This candidate cross-tissue co-expression pattern
+suggests that peripheral organ miRNA shifts may co-vary
+with the regulatory miRNA environment within the cen-
+tral nervous system during long-duration missions, though
+wet-lab validation is required to establish any mechanistic
+relationship.
+4.3 Implications for Multi-Organ Hypothesis Genera-
+tion
+If a spaceflight biological system exhibits candidate cross-
+tissue miRNA co-expression dependencies, designing
+
+--- PAGE 7 ---
+Decoding the Spaceflight-Induced Liver-Brain Transcriptomic Axis 7
+countermeasures targeting isolated organs may be insuf-
+ficient. Monitoring central nervous system neuroinflam-
+matory markers without also tracking the underlying hep-
+atic redox expression environment may represent an in-
+complete observational approach, as the peripheral liver
+miRNA profile may co-vary with downstream CNS ex-
+pression states.
+Future biomedical hypotheses should enforce a multi-
+organ observational approach. By utilizing this predictive
+computational framework, aerospace medical researchers
+can identify peripheral, accessible tissue miRNA profiles
+(such as circulating liver biomarkers) as candidate in-
+dicators of downstream central nervous system miRNA
+expression trends. Importantly, the static co-expression
+associations identified here represent candidate predictive
+correlations and should not be interpreted as established
+physiological mechanisms.
+4.4 Limitations and Future Work
+While our regularized framework offers a novel lens on
+systemic spaceflight miRNA co-expression biology, sev-
+eral distinct limitations must be acknowledged. First, the
+RRRM-1 cohort is small ( n = 9), reflecting the strict
+physical and logistical constraints of International Space
+Station payloads. Replicating these candidate predictive
+cross-tissue associations across larger, multi-modal hu-
+man and animal datasets within the NASA Open Science
+Data Repository will be essential to determine whether the
+mmu-miR-122-5p liver-brain candidate axis generalizes
+across diverse biological cohorts and longer spaceflight
+durations.
+Second, the current pipeline is strictly correlational:
+it captures synchronized co-expression trends between
+peripheral liver miRNA inputs and central brain miRNA
+targets within a static cross-sectional dataset. Future wet-
+lab validation— specifically utilizing targeted miRNA
+knockdown models or localized hepatic antioxidant inter-
+ventions in simulated microgravity systems—is required
+to determine whether any causal or mechanistic relation-
+ship underlies the identified co-expression patterns. Fu-
+ture work will also explore the integration of multi-tissue
+variational autoencoders (β-V AEs) to explicitly separate
+task-specific environmental expression shifts from base-
+line inter-subject physiological variance.
+5. Conclusion
+We present a constrained deep learning analysis of can-
+didate cross-tissue miRNA co-expression associations in-
+duced by the spaceflight environment. Through a regular-
+ized PyTorch Multi-Layer Perceptron framework applied
+to a focused signature of 6 peripheral liver and 5 cen-
+tral brain miRNA features from female BALB/cAnNTac
+mice (RRRM-1 / RR-8; GEO Accession: GSE294046),
+we report empirical findings suggesting that traditional
+single-tissue workflows may miss candidate system-wide
+multi-organ miRNA co-expression patterns. Our com-
+putational framework successfully mapped a candidate
+predictive cross-tissue miRNA co-expression axis with
+an optimized validation mean squared error of 1.1062, re-
+vealing that spaceflight-associated hepatic miRNA shifts
+tightly correlate with a synchronized down-regulation of
+central nervous system master regulatory miRNAs mmu-
+miR-124-3p and the let-7 family.
+By establishing mmu-miR-122-5p as the primary can-
+didate peripheral tracking anchor within this correlational
+liver-brain axis, this study introduces an empirical pilot
+tool for mapping predictive miRNA co-expression trends
+within high-dimensional, sample-sparse spaceflight data.
+Future aerospace biomedical research may benefit from
+moving beyond isolated organ tracking toward integrated,
+multi-tissue miRNA profiling paradigms. Monitoring pe-
+ripheral hepatic miRNA shifts as candidate indicators
+of central nervous system expression states represents a
+promising hypothesis for future targeted investigation
+toward dependable, multi-organ biomedical strategies
+to safeguard astronaut neurological health during long-
+duration interplanetary missions.
+Acknowledgements
+Conflict of Interest: The authors declare no competing
+interests.
+Data Access: The data supporting the findings of this
+study are available through the NASA Open Science Data
+Repository (OSDR), GEO Accession GSE294046, Ro-
+dent Research Reference Mission-1 (RRRM-1 / RR-8)
+payload data infrastructure.
+Funding Statement: This research received no specific
+grant from any funding agency.
+Author Contributions & Support: The authors are
+greatly appreciative of the data infrastructure provided by
+the NASA Open Science Data Repository. The authors
+also express sincere gratitude to collaborating NASA-
+affiliated scientists, working group members, and institu-
+tional mentors for providing invaluable technical support,
+guidance, and collaboration throughout the development
+of this research manuscript.

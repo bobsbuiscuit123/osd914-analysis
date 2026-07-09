@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1350" viewBox="0 0 2400 1350">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<style>text{font-family:Arial,Helvetica,sans-serif;dominant-baseline:auto;} .small{letter-spacing:0;}</style>
+<text x="90" y="58" font-size="48" font-weight="700" fill="#14213d" text-anchor="start" dominant-baseline="hanging">Figure 3. Liver-Brain Biological Pathway Axis</text>
+<text x="92" y="118" font-size="25" font-weight="400" fill="#52616f" text-anchor="start" dominant-baseline="hanging">A proposed redox-miRNA signaling route linking hepatic spaceflight stress to CNS master regulator suppression.</text>
+<line x1="90" y1="170" x2="2310" y2="170" stroke="#dce4ec" stroke-width="3" stroke-linecap="round"/>
+<rect x="85" y="235" width="675" height="925" rx="22" fill="#fff3dc" fill-opacity="1.000" stroke="#d39228" stroke-width="4"/>
+<rect x="855" y="235" width="690" height="925" rx="22" fill="#e9f1fb" fill-opacity="1.000" stroke="#527aa3" stroke-width="4"/>
+<rect x="1640" y="235" width="675" height="925" rx="22" fill="#f4f7fb" fill-opacity="1.000" stroke="#527aa3" stroke-width="4"/>
+<text x="125" y="278" font-size="40" font-weight="700" fill="#92630f" text-anchor="start" dominant-baseline="hanging">Liver</text>
+<text x="895" y="278" font-size="40" font-weight="700" fill="#315d82" text-anchor="start" dominant-baseline="hanging">Circulation / BBB</text>
+<text x="1680" y="278" font-size="40" font-weight="700" fill="#315d82" text-anchor="start" dominant-baseline="hanging">Brain</text>
+<rect x="150" y="350" width="500" height="112" rx="18" fill="#fbe8e3" fill-opacity="1.000" stroke="#c85a4a" stroke-width="4"/>
+<text x="400.0" y="375" font-size="28" font-weight="700" fill="#17212b" text-anchor="middle" dominant-baseline="hanging">Spaceflight stress</text>
+<text x="400.0" y="408" font-size="28" font-weight="700" fill="#17212b" text-anchor="middle" dominant-baseline="hanging">microgravity + radiation</text>
+<rect x="150" y="528" width="500" height="138" rx="18" fill="#ffffff" fill-opacity="1.000" stroke="#92630f" stroke-width="4"/>
+<text x="400.0" y="566" font-size="28" font-weight="700" fill="#17212b" text-anchor="middle" dominant-baseline="hanging">Degraded Glutathione Matrix</text>
+<text x="400.0" y="599" font-size="28" font-weight="700" fill="#17212b" text-anchor="middle" dominant-baseline="hanging">Loss of Redox Homeostasis</text>
+<rect x="150" y="738" width="500" height="126" rx="18" fill="#ffffff" fill-opacity="1.000" stroke="#2f6f73" stroke-width="4"/>
+<text x="400.0" y="770" font-size="28" font-weight="700" fill="#17212b" text-anchor="middle" dominant-baseline="hanging">Upstream nuclear trigger</text>
+<text x="400.0" y="803" font-size="28" font-weight="700" fill="#17212b" text-anchor="middle" dominant-baseline="hanging">redox-sensitive transcription</text>
+<rect x="150" y="944" width="500" height="136" rx="18" fill="#e8f5ea" fill-opacity="1.000" stroke="#4b8a54" stroke-width="4"/>
+<text x="400.0" y="981" font-size="28" font-weight="700" fill="#17212b" text-anchor="middle" dominant-baseline="hanging">mmu-miR-122-5p</text>
+<text x="400.0" y="1014" font-size="28" font-weight="700" fill="#17212b" text-anchor="middle" dominant-baseline="hanging">upregulated hepatic anchor</text>
+<line x1="400" y1="462" x2="400.0" y2="512.4" stroke="#923f37" stroke-width="7" stroke-linecap="round"/>
+<polygon points="400.0,528.0 387.1,507.7 412.9,507.7" fill="#923f37"/>
+<line x1="400" y1="666" x2="400.0" y2="722.4" stroke="#92630f" stroke-width="7" stroke-linecap="round"/>
+<polygon points="400.0,738.0 387.1,717.7 412.9,717.7" fill="#92630f"/>
+<line x1="400" y1="864" x2="400.0" y2="928.4" stroke="#1f5155" stroke-width="7" stroke-linecap="round"/>
+<polygon points="400.0,944.0 387.1,923.7 412.9,923.7" fill="#1f5155"/>
+<rect x="965" y="440" width="410" height="128" rx="18" fill="#ffffff" fill-opacity="1.000" stroke="#527aa3" stroke-width="4"/>
+<text x="1170.0" y="469" font-size="32" font-weight="700" fill="#4b8a54" text-anchor="middle" dominant-baseline="hanging">circulating</text>
+<text x="1170.0" y="506" font-size="32" font-weight="700" fill="#4b8a54" text-anchor="middle" dominant-baseline="hanging">mmu-miR-122-5p</text>
+<line x1="650" y1="1012" x2="864.6" y2="704.9" stroke="#4b8a54" stroke-width="8" stroke-linecap="round"/>
+<polygon points="875.0,690.0 873.8,718.0 849.2,700.8" fill="#4b8a54"/>
+<text x="595" y="884" font-size="25" font-weight="700" fill="#4b8a54" text-anchor="middle" dominant-baseline="hanging">hepatic release</text>
+<line x1="915" y1="690" x2="1456" y2="690" stroke="#4b8a54" stroke-width="11" stroke-linecap="round"/>
+<ellipse cx="1001.0" cy="691.0" rx="21.0" ry="21.0" fill="#ffffff" fill-opacity="1.000" stroke="#4b8a54" stroke-width="4"/>
+<ellipse cx="1116.0" cy="691.0" rx="21.0" ry="21.0" fill="#ffffff" fill-opacity="1.000" stroke="#4b8a54" stroke-width="4"/>
+<ellipse cx="1231.0" cy="691.0" rx="21.0" ry="21.0" fill="#ffffff" fill-opacity="1.000" stroke="#4b8a54" stroke-width="4"/>
+<ellipse cx="1346.0" cy="691.0" rx="21.0" ry="21.0" fill="#ffffff" fill-opacity="1.000" stroke="#4b8a54" stroke-width="4"/>
+<text x="1190" y="742" font-size="27" font-weight="700" fill="#4b8a54" text-anchor="middle" dominant-baseline="hanging">systemic circulation</text>
+<rect x="1435" y="350" width="78" height="685" rx="15" fill="#ffffff" fill-opacity="1.000" stroke="#315d82" stroke-width="3"/>
+<line x1="1474" y1="385" x2="1474" y2="1000" stroke="#315d82" stroke-width="7" stroke-linecap="round" stroke-dasharray="22 18"/>
+<rect x="1248" y="320" width="154" height="92" rx="12" fill="#ffffff" fill-opacity="1.000" stroke="#315d82" stroke-width="3"/>
+<text x="1325.0" y="333" font-size="20" font-weight="700" fill="#315d82" text-anchor="middle" dominant-baseline="hanging">Blood-Brain</text>
+<text x="1325.0" y="356" font-size="20" font-weight="700" fill="#315d82" text-anchor="middle" dominant-baseline="hanging">Barrier</text>
+<text x="1325.0" y="379" font-size="20" font-weight="700" fill="#315d82" text-anchor="middle" dominant-baseline="hanging">(BBB)</text>
+<line x1="1456" y1="690" x2="1644.2" y2="690.0" stroke="#4b8a54" stroke-width="11" stroke-linecap="round"/>
+<polygon points="1665.0,690.0 1638.0,707.1 1638.0,672.9" fill="#4b8a54"/>
+<rect x="1298" y="794" width="124" height="72" rx="12" fill="#ffffff" fill-opacity="1.000" stroke="#315d82" stroke-width="3"/>
+<text x="1360.0" y="809" font-size="20" font-weight="700" fill="#315d82" text-anchor="middle" dominant-baseline="hanging">passes</text>
+<text x="1360.0" y="832" font-size="20" font-weight="700" fill="#315d82" text-anchor="middle" dominant-baseline="hanging">through</text>
+<rect x="1710" y="612" width="275" height="118" rx="18" fill="#e8f5ea" fill-opacity="1.000" stroke="#4b8a54" stroke-width="4"/>
+<text x="1847.5" y="643" font-size="26" font-weight="700" fill="#17212b" text-anchor="middle" dominant-baseline="hanging">mmu-miR-122-5p</text>
+<text x="1847.5" y="673" font-size="26" font-weight="700" fill="#17212b" text-anchor="middle" dominant-baseline="hanging">CNS entry</text>
+<line x1="1760" y1="410" x2="1858" y2="350" stroke="#527aa3" stroke-width="4" stroke-linecap="round"/>
+<line x1="1858" y1="350" x2="1960" y2="420" stroke="#527aa3" stroke-width="4" stroke-linecap="round"/>
+<line x1="1858" y1="350" x2="1875" y2="500" stroke="#527aa3" stroke-width="4" stroke-linecap="round"/>
+<line x1="1960" y1="420" x2="1998" y2="535" stroke="#527aa3" stroke-width="4" stroke-linecap="round"/>
+<line x1="1875" y1="500" x2="1998" y2="535" stroke="#527aa3" stroke-width="4" stroke-linecap="round"/>
+<line x1="1760" y1="410" x2="1875" y2="500" stroke="#527aa3" stroke-width="4" stroke-linecap="round"/>
+<ellipse cx="1760.0" cy="410.0" rx="26.0" ry="26.0" fill="#dce8f7" fill-opacity="1.000" stroke="#527aa3" stroke-width="3"/>
+<ellipse cx="1858.0" cy="350.0" rx="26.0" ry="26.0" fill="#dce8f7" fill-opacity="1.000" stroke="#527aa3" stroke-width="3"/>
+<ellipse cx="1960.0" cy="420.0" rx="26.0" ry="26.0" fill="#dce8f7" fill-opacity="1.000" stroke="#527aa3" stroke-width="3"/>
+<ellipse cx="1875.0" cy="500.0" rx="26.0" ry="26.0" fill="#dce8f7" fill-opacity="1.000" stroke="#527aa3" stroke-width="3"/>
+<ellipse cx="1998.0" cy="535.0" rx="26.0" ry="26.0" fill="#dce8f7" fill-opacity="1.000" stroke="#527aa3" stroke-width="3"/>
+<text x="1845" y="568" font-size="24" font-weight="700" fill="#315d82" text-anchor="middle" dominant-baseline="hanging">CNS regulatory field</text>
+<rect x="2040" y="525" width="245" height="122" rx="18" fill="#fde8ea" fill-opacity="1.000" stroke="#b73e45" stroke-width="4"/>
+<text x="2162.5" y="559" font-size="25" font-weight="700" fill="#17212b" text-anchor="middle" dominant-baseline="hanging">suppression of</text>
+<text x="2162.5" y="588" font-size="25" font-weight="700" fill="#17212b" text-anchor="middle" dominant-baseline="hanging">mmu-miR-124-3p</text>
+<rect x="2040" y="825" width="245" height="122" rx="18" fill="#fde8ea" fill-opacity="1.000" stroke="#b73e45" stroke-width="4"/>
+<text x="2162.5" y="859" font-size="25" font-weight="700" fill="#17212b" text-anchor="middle" dominant-baseline="hanging">suppression of</text>
+<text x="2162.5" y="888" font-size="25" font-weight="700" fill="#17212b" text-anchor="middle" dominant-baseline="hanging">let-7 family</text>
+<line x1="1985" y1="640" x2="2040" y2="560" stroke="#b73e45" stroke-width="7" stroke-linecap="round"/>
+<line x1="2024.3" y1="549.2" x2="2055.7" y2="570.8" stroke="#b73e45" stroke-width="7" stroke-linecap="round"/>
+<line x1="1985" y1="710" x2="2040" y2="895" stroke="#b73e45" stroke-width="7" stroke-linecap="round"/>
+<line x1="2058.2" y1="889.6" x2="2021.8" y2="900.4" stroke="#b73e45" stroke-width="7" stroke-linecap="round"/>
+<rect x="1786" y="835" width="165" height="82" rx="12" fill="#ffffff" fill-opacity="1.000" stroke="#b73e45" stroke-width="3"/>
+<text x="1868.5" y="851" font-size="23" font-weight="700" fill="#b73e45" text-anchor="middle" dominant-baseline="hanging">direct</text>
+<text x="1868.5" y="878" font-size="23" font-weight="700" fill="#b73e45" text-anchor="middle" dominant-baseline="hanging">inhibition</text>
+</svg>

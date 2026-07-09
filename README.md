@@ -5,7 +5,6 @@ This repository contains the multi-modal AI pipeline for analyzing systemic tran
 
 ### Team
 * **Principal Investigator:** Pratheek Mukkavilli
-* **Data Engineer:** Neel Kumar
 * **Technical Advisor:** Xavier-Lewis Palmer, Ph.D.
 * **Biological Validation:** Rosa Prahl, Michelle Medeiros
 

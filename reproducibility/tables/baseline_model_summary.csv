@@ -1,0 +1,4 @@
+model_id,model,loocv_vmse,interpretation
+training_fold_mean,Training-fold mean,1.914782914055675,Naive average-expression baseline
+linear_regression,Linear regression,1.1599864132548536,Unregularized multivariate linear model
+ridge_regression,Nested ridge regression,1.8808717609927441,Regularized linear model with alpha selected inside each outer fold

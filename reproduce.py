@@ -39,6 +39,7 @@ HIGH_CONFIDENCE_LIVER_MIRNAS = [
 ]
 
 DEFAULT_SEEDS = [101, 202, 303, 404, 505]
+TOP_BRAIN_TARGETS = 5
 
 
 class LiverBrainCrossTalkMLP(nn.Module):
@@ -182,7 +183,7 @@ def rebuild_clean_matrices(output_dir: Path) -> tuple[pd.DataFrame, pd.DataFrame
     return liver_final, brain_final, metadata
 
 
-def select_model_matrices(liver_df: pd.DataFrame, brain_df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, list[str], list[str]]:
+def select_model_matrices(liver_df: pd.DataFrame, brain_df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, list[str]]:
     matching_subjects = liver_df.index.intersection(brain_df.index)
     liver_df = liver_df.loc[matching_subjects].sort_index()
     brain_df = brain_df.loc[matching_subjects].sort_index()
@@ -192,8 +193,92 @@ def select_model_matrices(liver_df: pd.DataFrame, brain_df: pd.DataFrame) -> tup
     if missing:
         raise ValueError(f"Missing expected liver miRNAs: {', '.join(missing)}")
 
-    selected_brain = brain_df.var(axis=0).sort_values(ascending=False).head(5).index.tolist()
-    return liver_df[selected_liver], brain_df[selected_brain], selected_liver, selected_brain
+    return liver_df[selected_liver], brain_df, selected_liver
+
+
+def rank_brain_targets_by_training_variance(
+    brain_df: pd.DataFrame,
+    train_samples: Iterable[str],
+) -> pd.Series:
+    train_samples = list(train_samples)
+    if len(train_samples) < 2:
+        raise ValueError("At least two training samples are required to rank brain targets by variance.")
+    return brain_df.loc[train_samples].var(axis=0).sort_values(ascending=False, kind="mergesort")
+
+
+def select_fold_brain_targets(
+    brain_df: pd.DataFrame,
+    train_samples: Iterable[str],
+    top_n: int = TOP_BRAIN_TARGETS,
+) -> list[str]:
+    ranked = rank_brain_targets_by_training_variance(brain_df, train_samples)
+    if ranked.shape[0] < top_n:
+        raise ValueError(f"Need at least {top_n} brain targets, found {ranked.shape[0]}.")
+    return ranked.head(top_n).index.tolist()
+
+
+def build_fold_target_selection(
+    brain_df: pd.DataFrame,
+    samples: Iterable[str],
+    top_n: int = TOP_BRAIN_TARGETS,
+) -> tuple[pd.DataFrame, dict]:
+    samples = list(samples)
+    full_cohort_reference = select_fold_brain_targets(brain_df, samples, top_n=top_n)
+    fold_rows: list[dict] = []
+    fold_summaries: list[dict] = []
+
+    for fold_index, sample_id in enumerate(samples, start=1):
+        train_samples = [sample for sample in samples if sample != sample_id]
+        ranked = rank_brain_targets_by_training_variance(brain_df, train_samples).head(top_n)
+        selected_targets = ranked.index.tolist()
+        target_set_key = ";".join(selected_targets)
+        fold_summaries.append(
+            {
+                "fold": fold_index,
+                "held_out_sample_id": sample_id,
+                "train_sample_count": len(train_samples),
+                "selected_brain_targets": selected_targets,
+                "matches_full_cohort_reference": selected_targets == full_cohort_reference,
+            }
+        )
+        for rank, (target, training_variance) in enumerate(ranked.items(), start=1):
+            fold_rows.append(
+                {
+                    "fold": fold_index,
+                    "held_out_sample_id": sample_id,
+                    "cohort": cohort(sample_id),
+                    "train_sample_count": len(train_samples),
+                    "rank": rank,
+                    "target": target,
+                    "training_variance": float(training_variance),
+                    "fold_target_set": target_set_key,
+                    "matches_full_cohort_reference": bool(selected_targets == full_cohort_reference),
+                }
+            )
+
+    ordered_sets = [summary["selected_brain_targets"] for summary in fold_summaries]
+    unique_ordered_sets: list[list[str]] = []
+    for target_set in ordered_sets:
+        if target_set not in unique_ordered_sets:
+            unique_ordered_sets.append(target_set)
+
+    target_union = sorted({target for target_set in ordered_sets for target in target_set})
+    same_ordered_targets = all(target_set == ordered_sets[0] for target_set in ordered_sets)
+    same_target_set = all(set(target_set) == set(ordered_sets[0]) for target_set in ordered_sets)
+    display_targets = ordered_sets[0] if same_ordered_targets else target_union
+    summary = {
+        "top_n": top_n,
+        "selection_scope": "outer LOOCV training samples only",
+        "train_sample_count_per_fold": len(samples) - 1,
+        "full_cohort_reference_top_targets": full_cohort_reference,
+        "same_ordered_targets_all_folds": bool(same_ordered_targets),
+        "same_target_set_all_folds": bool(same_target_set),
+        "unique_ordered_target_sets": unique_ordered_sets,
+        "target_union": target_union,
+        "display_brain_targets": display_targets,
+        "folds": fold_summaries,
+    }
+    return pd.DataFrame(fold_rows), summary
 
 
 def train_model(
@@ -276,7 +361,6 @@ def run_seed(
     X_raw: pd.DataFrame,
     y_raw: pd.DataFrame,
     feature_names: list[str],
-    target_names: list[str],
     seed: int,
     args: argparse.Namespace,
 ) -> tuple[dict, list[dict], list[dict], list[dict]]:
@@ -288,11 +372,12 @@ def run_seed(
     for fold_index, sample_id in enumerate(samples, start=1):
         fold_seed = seed * 1000 + fold_index
         train_samples = [sample for sample in samples if sample != sample_id]
+        target_names = select_fold_brain_targets(y_raw, train_samples)
 
         X_train_raw = X_raw.loc[train_samples]
-        y_train_raw = y_raw.loc[train_samples]
+        y_train_raw = y_raw.loc[train_samples, target_names]
         X_val_raw = X_raw.loc[[sample_id]]
-        y_val_raw = y_raw.loc[[sample_id]]
+        y_val_raw = y_raw.loc[[sample_id], target_names]
 
         X_scaler = fit_scaler(X_train_raw)
         y_scaler = fit_scaler(y_train_raw)
@@ -323,6 +408,7 @@ def run_seed(
                 "sample_id": sample_id,
                 "cohort": cohort(sample_id),
                 "fold_mse": fold_mse,
+                "selected_brain_targets": ";".join(target_names),
             }
         )
 
@@ -573,11 +659,16 @@ def run_reproducibility(args: argparse.Namespace) -> dict:
     figure_dir = output_dir / "figures"
 
     liver_clean, brain_clean, clean_metadata = rebuild_clean_matrices(output_dir)
-    X_raw, y_raw, feature_names, target_names = select_model_matrices(liver_clean, brain_clean)
+    X_raw, y_raw, feature_names = select_model_matrices(liver_clean, brain_clean)
     seeds = parse_seeds(args.seeds)
+    target_selection_df, target_selection_summary = build_fold_target_selection(y_raw, X_raw.index)
+    display_target_names = target_selection_summary["display_brain_targets"]
 
     log(f"Selected liver inputs: {', '.join(feature_names)}")
-    log(f"Selected brain targets: {', '.join(target_names)}")
+    if target_selection_summary["same_ordered_targets_all_folds"]:
+        log(f"Fold-wise brain target selection is identical across LOOCV folds: {', '.join(display_target_names)}")
+    else:
+        log(f"Fold-wise brain target selection varies across LOOCV folds; target union: {', '.join(display_target_names)}")
     log(f"Running leakage-free LOOCV for seeds: {', '.join(map(str, seeds))}")
 
     seed_results: list[dict] = []
@@ -590,7 +681,6 @@ def run_reproducibility(args: argparse.Namespace) -> dict:
             X_raw,
             y_raw,
             feature_names,
-            target_names,
             seed,
             args,
         )
@@ -603,11 +693,12 @@ def run_reproducibility(args: argparse.Namespace) -> dict:
     seed_df = pd.DataFrame(seed_results)
     fold_df = pd.DataFrame(fold_rows)
     predictions_df = pd.DataFrame(prediction_rows)
-    expression_df = group_expression_summary(liver_clean, brain_clean, feature_names, target_names)
+    expression_df = group_expression_summary(liver_clean, brain_clean, feature_names, display_target_names)
 
     save_csv(seed_df, table_dir / "metrics_by_seed.csv")
     save_csv(fold_df, table_dir / "fold_metrics.csv")
     save_csv(predictions_df, table_dir / "predictions.csv")
+    save_csv(target_selection_df, table_dir / "fold_target_selection.csv")
     save_csv(expression_df, table_dir / "expression_group_summary.csv")
 
     if shap_rows:
@@ -638,7 +729,7 @@ def run_reproducibility(args: argparse.Namespace) -> dict:
 
     vmse_values = seed_df["vmse"].to_numpy(dtype=float)
     metrics = {
-        "pipeline_version": 1,
+        "pipeline_version": 2,
         "python": sys.version.split()[0],
         "packages": {
             "numpy": np.__version__,
@@ -657,15 +748,16 @@ def run_reproducibility(args: argparse.Namespace) -> dict:
         "samples": [{"sample_id": sample, "cohort": cohort(sample)} for sample in X_raw.index],
         "cohort_counts": {group: int(count) for group, count in pd.Series([cohort(sample) for sample in X_raw.index]).value_counts().sort_index().items()},
         "selected_liver_features": feature_names,
-        "selected_brain_targets": target_names,
-        "target_selection": "top 5 brain miRNAs by variance in the clean brain matrix",
+        "selected_brain_targets": display_target_names,
+        "target_selection": "top 5 brain miRNAs by variance within each outer LOOCV training fold",
+        "target_selection_audit": target_selection_summary,
         "normalization": "log1p plus z-score fitted inside each training fold only",
         "leakage_free": True,
         "seeds": seeds,
         "model": {
             "input_dim": len(feature_names),
             "hidden_dim": args.hidden_dim,
-            "output_dim": len(target_names),
+            "output_dim": TOP_BRAIN_TARGETS,
             "dropout_rate": args.dropout_rate,
             "epochs": args.epochs,
             "learning_rate": args.lr,
@@ -686,6 +778,7 @@ def run_reproducibility(args: argparse.Namespace) -> dict:
             "metrics_by_seed_csv": str((table_dir / "metrics_by_seed.csv").relative_to(ROOT)),
             "fold_metrics_csv": str((table_dir / "fold_metrics.csv").relative_to(ROOT)),
             "predictions_csv": str((table_dir / "predictions.csv").relative_to(ROOT)),
+            "fold_target_selection_csv": str((table_dir / "fold_target_selection.csv").relative_to(ROOT)),
             "expression_group_summary_csv": str((table_dir / "expression_group_summary.csv").relative_to(ROOT)),
             "shap_values_csv": str((table_dir / "shap_values.csv").relative_to(ROOT)) if shap_rows else None,
             "shap_importance_summary_csv": str((table_dir / "shap_importance_summary.csv").relative_to(ROOT)) if shap_rows else None,
@@ -697,7 +790,7 @@ def run_reproducibility(args: argparse.Namespace) -> dict:
     make_residual_figure(predictions_df, metrics, figure_dir)
     if not shap_summary.empty:
         make_shap_figure(shap_summary, figure_dir)
-    make_group_expression_figure(expression_df, target_names, figure_dir)
+    make_group_expression_figure(expression_df, display_target_names, figure_dir)
     write_dashboard(metrics, output_dir)
 
     return metrics

@@ -28,11 +28,18 @@
   "normalization": "log1p plus z-score fitted inside each training fold only",
   "observed_mlp": {
     "n_seeds": 5,
-    "source": "reproducibility/metrics.json",
-    "vmse_max": 1.8566848933696747,
-    "vmse_mean": 1.6488700018988716,
-    "vmse_min": 1.4526674797137578,
-    "vmse_std": 0.1395579765976067
+    "seeds": [
+      101,
+      202,
+      303,
+      404,
+      505
+    ],
+    "source": "recomputed by baselines.py using the same MLP seed procedure as the permutation null",
+    "vmse_max": 1.856685074990442,
+    "vmse_mean": 1.648870125099639,
+    "vmse_min": 1.4526675515846277,
+    "vmse_std": 0.13955800156537904
   },
   "permutation": {
     "mlp_seeds": [
@@ -43,8 +50,20 @@
       505
     ],
     "permutation_seed": 914,
-    "requested_permutations": 0,
-    "summary": null
+    "requested_permutations": 1000,
+    "summary": {
+      "count_permuted_less_or_equal_observed": 74,
+      "n_permutations": 1000,
+      "observed_mlp_vmse": 1.648870125099639,
+      "permutation_p_value": 0.07492507492507493,
+      "vmse_max": 5.911439863102268,
+      "vmse_mean": 2.9800925332476935,
+      "vmse_median": 2.862588220108108,
+      "vmse_min": 0.9643946838089066,
+      "vmse_percentile_2_5": 1.3861988672595356,
+      "vmse_percentile_97_5": 5.158405262583365,
+      "vmse_std": 1.002070146684646
+    }
   },
   "ridge_alphas": [
     0.001,

@@ -14,7 +14,7 @@ or directly:
 
 The canonical pipeline is `reproduce.py`. It rebuilds clean liver/brain matrices from the raw files, selects the top five brain targets by variance inside each outer LOOCV training fold only, uses fold-wise log1p plus z-score normalization fitted only on each LOOCV training fold, trains the MLP under fixed repeated seeds, aggregates SHAP across folds and seeds, and writes all outputs under `reproducibility/`.
 
-The fold-wise target-selection run was regenerated on 2026-07-18 with `make reproduce` and `make baselines`.
+The fold-wise target-selection run was regenerated with `make reproduce` and `make baselines`; the 1,000-shuffle permutation null was regenerated with `.venv/bin/python baselines.py --permutations 1000`.
 
 Current regenerated summary:
 
@@ -46,16 +46,24 @@ Current leakage-free LOOCV baseline results:
 | Linear regression | `1.1600` | `39.4%` |
 | Nested ridge regression | `1.8809` | `1.8%` |
 | MLP, 5-seed mean | `1.6489` | `13.9%` |
+| Permuted MLP median | `2.8626` | `-49.5%` |
 
 The baseline script uses the same nine paired mice, six liver inputs, fold-selected brain targets, outer LOOCV folds, and fold-specific log1p/z-score preprocessing as the MLP. Ridge alpha is selected by nested leave-one-out cross-validation inside each outer training fold after that outer fold's brain target set has been selected from its eight training samples.
 
-The 1,000-shuffle subject-pairing permutation null should be regenerated under the fold-wise target-selection pipeline before being reported:
+The current 1,000-shuffle subject-pairing permutation null was generated under the fold-wise target-selection pipeline with:
 
 ```bash
 .venv/bin/python baselines.py --permutations 1000
 ```
 
-Older permutation CSVs may still exist from a previous run, but they are not current for the fold-wise target-selection analysis unless this command is rerun.
+The regenerated MLP subject-pairing permutation summary is:
+
+- Observed MLP VMSE: `1.6489`
+- Permutations: `1000`
+- Count permuted VMSE less than or equal to observed VMSE: `74`
+- Permutation p-value: `0.07492507492507493`
+- Permuted VMSE median: `2.8626`
+- Permuted VMSE 2.5-97.5 percentile range: `1.3862-5.1584`
 
 Primary outputs:
 

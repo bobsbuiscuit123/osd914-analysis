@@ -1,0 +1,29 @@
+{
+  "title": "Reproducibility package for predictive modeling of spaceflight-induced microRNA co-expression patterns",
+  "upload_type": "software",
+  "description": "Code, cleaned matrices, model-comparison outputs, permutation-test outputs, figures, and manuscript artifacts for a comparative analysis of linear and neural-network liver-brain microRNA co-expression models in RRRM-1/RR-8 spaceflight-exposed mice.",
+  "creators": [
+    {
+      "name": "Mukkavilli, Pratheek"
+    },
+    {
+      "name": "Medeiros, Michelle"
+    },
+    {
+      "name": "Prahl, Rosa"
+    },
+    {
+      "name": "Palmer, Xavier-Lewis"
+    }
+  ],
+  "keywords": [
+    "spaceflight biology",
+    "microRNA",
+    "NASA OSDR",
+    "RRRM-1",
+    "RR-8",
+    "machine learning",
+    "reproducibility"
+  ],
+  "access_right": "open"
+}

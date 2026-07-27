@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+"""Canonical paper-reproduction pipeline for the OSD-914 liver-brain analysis."""
+
 import argparse
 import hashlib
 import json
@@ -9,7 +11,7 @@ import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable
+from typing import Iterable, Optional
 
 os.environ.setdefault("MPLCONFIGDIR", "/private/tmp/matplotlib")
 
@@ -65,6 +67,14 @@ class Scaler:
 
 def log(message: str) -> None:
     print(f"[reproduce] {message}", flush=True)
+
+
+def project_path(path: Path) -> str:
+    """Return a repository-relative path when possible, otherwise an absolute path."""
+    try:
+        return str(path.relative_to(ROOT))
+    except ValueError:
+        return str(path)
 
 
 def sha256(path: Path) -> str:
@@ -123,6 +133,14 @@ def transform_with_scaler(df: pd.DataFrame, scaler: Scaler) -> pd.DataFrame:
 
 
 def rebuild_clean_matrices(output_dir: Path) -> tuple[pd.DataFrame, pd.DataFrame, dict]:
+    missing_raw_files = [path for path in [RAW_MIRNA, BRAIN_SERIES] if not path.exists()]
+    if missing_raw_files:
+        missing = ", ".join(project_path(path) for path in missing_raw_files)
+        raise FileNotFoundError(
+            "Missing required raw input file(s): "
+            f"{missing}. Place the gzipped source files in the repository root before running."
+        )
+
     clean_dir = output_dir / "clean"
     clean_dir.mkdir(parents=True, exist_ok=True)
 
@@ -480,7 +498,7 @@ def group_expression_summary(liver_df: pd.DataFrame, brain_df: pd.DataFrame, fea
 def save_csv(df: pd.DataFrame, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(path, index=False)
-    log(f"Wrote {path.relative_to(ROOT)}")
+    log(f"Wrote {project_path(path)}")
 
 
 def save_figure(fig: plt.Figure, path: Path) -> None:
@@ -488,7 +506,7 @@ def save_figure(fig: plt.Figure, path: Path) -> None:
     fig.savefig(path, dpi=180, bbox_inches="tight")
     fig.savefig(path.with_suffix(".svg"), bbox_inches="tight")
     plt.close(fig)
-    log(f"Wrote {path.relative_to(ROOT)}")
+    log(f"Wrote {project_path(path)}")
 
 
 def make_architecture_figure(metrics: dict, figure_dir: Path) -> None:
@@ -643,13 +661,13 @@ def write_dashboard(metrics: dict, output_dir: Path) -> None:
 """,
         encoding="utf-8",
     )
-    log(f"Wrote {html_path.relative_to(ROOT)}")
+    log(f"Wrote {project_path(html_path)}")
 
 
 def write_metrics_json(metrics: dict, output_dir: Path) -> None:
     metrics_path = output_dir / "metrics.json"
     metrics_path.write_text(json.dumps(metrics, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    log(f"Wrote {metrics_path.relative_to(ROOT)}")
+    log(f"Wrote {project_path(metrics_path)}")
 
 
 def run_reproducibility(args: argparse.Namespace) -> dict:
@@ -774,14 +792,14 @@ def run_reproducibility(args: argparse.Namespace) -> dict:
             "vmse_max": float(np.max(vmse_values)),
         },
         "outputs": {
-            "metrics_json": str((output_dir / "metrics.json").relative_to(ROOT)),
-            "metrics_by_seed_csv": str((table_dir / "metrics_by_seed.csv").relative_to(ROOT)),
-            "fold_metrics_csv": str((table_dir / "fold_metrics.csv").relative_to(ROOT)),
-            "predictions_csv": str((table_dir / "predictions.csv").relative_to(ROOT)),
-            "fold_target_selection_csv": str((table_dir / "fold_target_selection.csv").relative_to(ROOT)),
-            "expression_group_summary_csv": str((table_dir / "expression_group_summary.csv").relative_to(ROOT)),
-            "shap_values_csv": str((table_dir / "shap_values.csv").relative_to(ROOT)) if shap_rows else None,
-            "shap_importance_summary_csv": str((table_dir / "shap_importance_summary.csv").relative_to(ROOT)) if shap_rows else None,
+            "metrics_json": project_path(output_dir / "metrics.json"),
+            "metrics_by_seed_csv": project_path(table_dir / "metrics_by_seed.csv"),
+            "fold_metrics_csv": project_path(table_dir / "fold_metrics.csv"),
+            "predictions_csv": project_path(table_dir / "predictions.csv"),
+            "fold_target_selection_csv": project_path(table_dir / "fold_target_selection.csv"),
+            "expression_group_summary_csv": project_path(table_dir / "expression_group_summary.csv"),
+            "shap_values_csv": project_path(table_dir / "shap_values.csv") if shap_rows else None,
+            "shap_importance_summary_csv": project_path(table_dir / "shap_importance_summary.csv") if shap_rows else None,
         },
     }
 
@@ -809,7 +827,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def main(argv: Iterable[str] | None = None) -> None:
+def main(argv: Optional[Iterable[str]] = None) -> None:
     args = build_arg_parser().parse_args(argv)
     metrics = run_reproducibility(args)
     summary = metrics["repeated_seed_summary"]

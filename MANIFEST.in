@@ -1,0 +1,15 @@
+include README.md
+include REPRODUCIBILITY.md
+include Makefile
+include .zenodo.json
+include GSE294046_miRNA_complete_quantification_raw.tsv.gz
+include GSE295428_series_matrix.txt.gz
+include supplementary_information.pdf
+include supplementary_information.docx
+include manuscript_comparative_study.docx
+recursive-include figures *.py *.png *.svg
+recursive-include reproducibility *.csv *.json *.html *.png *.svg
+recursive-include reproducibility/clean *.csv
+recursive-include final_pdf_images *.png
+recursive-include final_pdf_images_current *.png
+recursive-include final_pdf_images_latest *.png

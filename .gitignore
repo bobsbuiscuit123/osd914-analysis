@@ -211,3 +211,5 @@ __marimo__/
 data/
 *.csv
 *.txt
+reproducibility_smoke/
+reproducibility_baseline_smoke/

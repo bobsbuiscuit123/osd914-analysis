@@ -1,6 +1,6 @@
 PYTHON ?= .venv/bin/python
 
-.PHONY: reproduce baselines permutation-baselines smoke-test baseline-smoke
+.PHONY: reproduce baselines permutation-baselines smoke-test baseline-smoke check package clean-smoke
 
 reproduce:
 	$(PYTHON) reproduce.py
@@ -16,3 +16,12 @@ smoke-test:
 
 baseline-smoke:
 	$(PYTHON) baselines.py --permutations 5 --mlp-seeds 101 --epochs 5 --output-dir reproducibility_baseline_smoke
+
+check:
+	$(PYTHON) -m py_compile reproduce.py baselines.py clean_data.py ai.py figures/generate_nasa_figures.py
+
+package:
+	$(PYTHON) -m build --sdist
+
+clean-smoke:
+	rm -rf reproducibility_smoke reproducibility_baseline_smoke

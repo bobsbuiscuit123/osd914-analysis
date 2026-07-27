@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "osd914-analysis"
+version = "0.1.0"
+description = "Reproducible liver-brain miRNA modeling pipeline for NASA OSDR OSD-914."
+readme = "README.md"
+requires-python = ">=3.9"
+license = "LicenseRef-Proprietary"
+authors = [
+  { name = "Pratheek Mukkavilli" },
+]
+keywords = [
+  "spaceflight biology",
+  "microRNA",
+  "NASA OSDR",
+  "machine learning",
+  "reproducibility",
+]
+dependencies = [
+  "matplotlib>=3.8,<4",
+  "numpy>=1.26,<3",
+  "pandas>=2.0,<3",
+  "scikit-learn>=1.3,<2",
+  "shap>=0.45,<1",
+  "torch>=2.2,<3",
+]
+
+[project.optional-dependencies]
+dev = [
+  "build>=1.2",
+  "twine>=5",
+]
+
+[project.scripts]
+osd914-reproduce = "reproduce:main"
+osd914-baselines = "baselines:main"
+osd914-clean-data = "clean_data:main"
+
+[tool.setuptools]
+py-modules = ["reproduce", "baselines", "clean_data", "ai"]
+
+[tool.setuptools.exclude-package-data]
+"*" = ["*.pyc", "__pycache__/*", ".DS_Store"]

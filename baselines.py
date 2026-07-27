@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+"""Baseline and permutation comparisons for the OSD-914 reproduction package."""
+
 import argparse
 import json
 from pathlib import Path
-from typing import Iterable, Sequence
+from typing import Iterable, Optional, Sequence
 
 import matplotlib
 
@@ -23,6 +25,7 @@ from reproduce import (
     log,
     parse_seeds,
     predict,
+    project_path,
     rebuild_clean_matrices,
     save_csv,
     save_figure,
@@ -312,7 +315,7 @@ def run_observed_mlp_with_seeds(
     return summary, pd.DataFrame(rows)
 
 
-def load_observed_mlp_summary(metrics_path: Path, observed_mlp_vmse: float | None) -> dict | None:
+def load_observed_mlp_summary(metrics_path: Path, observed_mlp_vmse: Optional[float]) -> Optional[dict]:
     if observed_mlp_vmse is not None:
         return {
             "vmse_mean": float(observed_mlp_vmse),
@@ -334,7 +337,7 @@ def load_observed_mlp_summary(metrics_path: Path, observed_mlp_vmse: float | Non
         "vmse_min": float(summary.get("vmse_min", np.nan)),
         "vmse_max": float(summary.get("vmse_max", np.nan)),
         "n_seeds": len(seeds),
-        "source": str(metrics_path.relative_to(ROOT)) if metrics_path.is_relative_to(ROOT) else str(metrics_path),
+        "source": project_path(metrics_path),
     }
 
 
@@ -358,7 +361,7 @@ def load_observed_mlp_seed_results(metrics_path: Path) -> pd.DataFrame:
     )
 
 
-def summarize_permutations(permutation_df: pd.DataFrame, observed_mlp_vmse: float | None) -> dict | None:
+def summarize_permutations(permutation_df: pd.DataFrame, observed_mlp_vmse: Optional[float]) -> Optional[dict]:
     if permutation_df.empty:
         return None
     values = permutation_df["vmse"].to_numpy(dtype=float)
@@ -386,8 +389,8 @@ def summarize_permutations(permutation_df: pd.DataFrame, observed_mlp_vmse: floa
 
 def build_comparison_table(
     deterministic_summary: pd.DataFrame,
-    observed_mlp: dict | None,
-    permutation_summary: dict | None,
+    observed_mlp: Optional[dict],
+    permutation_summary: Optional[dict],
 ) -> pd.DataFrame:
     rows = deterministic_summary.copy()
     if observed_mlp is not None:
@@ -468,7 +471,7 @@ def make_baseline_comparison_figure(comparison_df: pd.DataFrame, figure_dir: Pat
     save_figure(fig, figure_dir / "figure_5_baseline_comparison.png")
 
 
-def make_permutation_figure(permutation_df: pd.DataFrame, observed_mlp_vmse: float | None, figure_dir: Path) -> None:
+def make_permutation_figure(permutation_df: pd.DataFrame, observed_mlp_vmse: Optional[float], figure_dir: Path) -> None:
     if permutation_df.empty:
         return
     fig, ax = plt.subplots(figsize=(8, 5))
@@ -487,8 +490,8 @@ def make_permutation_figure(permutation_df: pd.DataFrame, observed_mlp_vmse: flo
 def write_baseline_metrics(
     path: Path,
     comparison_df: pd.DataFrame,
-    observed_mlp: dict | None,
-    permutation_summary: dict | None,
+    observed_mlp: Optional[dict],
+    permutation_summary: Optional[dict],
     feature_names: Sequence[str],
     target_selection_summary: dict,
     alphas: Sequence[float],
@@ -522,7 +525,7 @@ def write_baseline_metrics(
         },
     }
     path.write_text(json.dumps(json_safe(payload), indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    log(f"Wrote {path.relative_to(ROOT)}")
+    log(f"Wrote {project_path(path)}")
 
 
 def run_baseline_analysis(args: argparse.Namespace) -> dict:
@@ -649,7 +652,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def main(argv: Iterable[str] | None = None) -> None:
+def main(argv: Optional[Iterable[str]] = None) -> None:
     args = build_arg_parser().parse_args(argv)
     if args.permutations < 0:
         raise ValueError("--permutations must be nonnegative.")

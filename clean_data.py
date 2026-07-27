@@ -1,88 +1,49 @@
-import pandas as pd
-import re
+from __future__ import annotations
 
-print("--- Starting Phase I: Dataset Harmonization & Filtering ---")
+"""Legacy clean-matrix CLI backed by the canonical reproduction code."""
 
+import argparse
+from pathlib import Path
+from typing import Iterable, Optional
 
-def extract_subject_id(sample_name):
-    """Convert sample columns like '3_Brain_HC-LAR-5_L1_1' to 'HC-LAR-5'."""
-    sample_name = str(sample_name)
-    tissue_match = re.match(r"^\d+_(?:Liver|Brain)_(.+?)_L1_1$", sample_name)
-    if tissue_match:
-        return tissue_match.group(1)
-
-    mouse_match = re.search(r"(Mouse[_ ]\d+|M\d+)", sample_name)
-    if mouse_match:
-        return mouse_match.group(1).replace(" ", "_")
-
-    return sample_name
+from reproduce import ROOT, project_path, rebuild_clean_matrices
 
 
-# 1. LOAD THE RAW DOWNLOADS
-# (Make sure these filenames match exactly what you downloaded)
-mirna_raw = pd.read_csv("GSE294046_miRNA_complete_quantification_raw.tsv.gz", sep="\t", index_col=0)
-brain_raw = pd.read_csv("GSE295428_series_matrix.txt.gz", sep="\t", comment="!", index_col=0)
+def build_arg_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description="Rebuild clean liver and brain matrices from the raw gzipped inputs.")
+    parser.add_argument(
+        "--output-dir",
+        default=".",
+        help="Directory that receives a clean/ subdirectory with rebuilt matrices.",
+    )
+    parser.add_argument(
+        "--skip-root-copies",
+        action="store_true",
+        help="Do not write legacy liver_features_clean.csv and brain_targets_clean.csv copies in the repository root.",
+    )
+    return parser
 
-liver_columns = [col for col in mirna_raw.columns if re.match(r"^\d+_Liver_", col)]
-brain_columns = [col for col in mirna_raw.columns if re.match(r"^\d+_Brain_", col)]
 
-if not liver_columns:
-    raise ValueError("No Liver sample columns were found in the miRNA matrix.")
-if not brain_columns:
-    raise ValueError("No Brain sample columns were found in the miRNA matrix.")
+def main(argv: Optional[Iterable[str]] = None) -> None:
+    args = build_arg_parser().parse_args(argv)
+    output_dir = Path(args.output_dir)
+    if not output_dir.is_absolute():
+        output_dir = ROOT / output_dir
 
-liver_raw = mirna_raw[liver_columns]
+    liver_df, brain_df, metadata = rebuild_clean_matrices(output_dir.resolve())
+    print(f"Clean liver matrix: {liver_df.shape[0]} samples x {liver_df.shape[1]} features")
+    print(f"Clean brain matrix: {brain_df.shape[0]} samples x {brain_df.shape[1]} targets")
+    print(f"Brain source: {metadata['brain_source']}")
+    print(f"Wrote clean matrices under: {project_path(output_dir / 'clean')}")
 
-# ==========================================
-# STEP 1 & 2: FEATURE SCREENING & FILTERING
-# ==========================================
+    if not args.skip_root_copies:
+        liver_path = ROOT / "liver_features_clean.csv"
+        brain_path = ROOT / "brain_targets_clean.csv"
+        liver_df.to_csv(liver_path)
+        brain_df.to_csv(brain_path)
+        print(f"Wrote legacy copy: {project_path(liver_path)}")
+        print(f"Wrote legacy copy: {project_path(brain_path)}")
 
-# Apply Michelle's threshold filtering rule to Liver miRNAs
-# (Keep rows where at least 10% of columns have counts >= 5)
-min_samples_threshold = max(1, int(0.10 * liver_raw.shape[1]))
-liver_filtered = liver_raw[(liver_raw >= 5).sum(axis=1) >= min_samples_threshold]
-print(f"Liver miRNAs filtered down from {liver_raw.shape[0]} to {liver_filtered.shape[0]} features.")
 
-# Slice Brain Dataset down to Michelle's target genes for Pipeline V2 & V1
-# (Add the exact target gene names as they appear in the dataset row headers)
-target_brain_genes = ["Sod1", "Sod2", "Cat", "Gpx1", "Gpx4", "Nfkb1"] 
-# Ensure we only pick genes that actually exist in the matrix to avoid KeyError
-available_genes = [gene for gene in target_brain_genes if gene in brain_raw.index]
-brain_filtered = brain_raw.loc[available_genes]
-
-if brain_filtered.empty:
-    print("Brain GEO series matrix has no expression rows for target genes.")
-    print("Using matching Brain miRNA samples from the quantification matrix instead.")
-    brain_filtered = mirna_raw.loc[liver_filtered.index, brain_columns]
-    brain_filtered = brain_filtered[(brain_filtered >= 5).sum(axis=1) >= min_samples_threshold]
-    print(f"Brain miRNAs filtered down to {brain_filtered.shape[0]} features.")
-else:
-    print(f"Brain transcriptome sliced down to {len(available_genes)} critical target pathways.")
-
-# ==========================================
-# STEP 3: ID ALIGNMENT & TRANSPOSITION
-# ==========================================
-
-# Transpose matrices so Rows = Mouse Samples, Columns = Biological Features
-X_features = liver_filtered.T
-y_targets = brain_filtered.T
-
-# Clean the Index IDs so they match perfectly across both tissues
-# (This strips out extra text so 'GSMxxx_Liver_Mouse1' and 'GSMyyy_Brain_Mouse1' both become 'Mouse1')
-X_features.index = X_features.index.map(extract_subject_id)
-y_targets.index = y_targets.index.map(extract_subject_id)
-
-# Intersect to keep ONLY the matching subjects
-matching_subjects = X_features.index.intersection(y_targets.index)
-X_final = X_features.loc[matching_subjects].sort_index()
-y_final = y_targets.loc[matching_subjects].sort_index()
-
-if X_final.empty or y_final.empty:
-    raise ValueError("No matching Liver/Brain subjects were found after ID alignment.")
-
-print(f"Successfully synchronized {len(matching_subjects)} matching rodent subjects.")
-
-# Save clean matrices out to clean CSVs for your AI script
-X_final.to_csv("liver_features_clean.csv")
-y_final.to_csv("brain_targets_clean.csv")
-print("Saved: 'liver_features_clean.csv' and 'brain_targets_clean.csv'. Ready for AI engine!")
+if __name__ == "__main__":
+    main()
